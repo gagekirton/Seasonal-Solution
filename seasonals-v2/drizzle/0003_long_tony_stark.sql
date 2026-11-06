@@ -1,0 +1,1 @@
+ALTER TABLE `follow_ups` MODIFY COLUMN `id` varchar(41) NOT NULL;

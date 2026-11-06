@@ -1,0 +1,80 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Winnipeg Handyman & Home Services | Seasonal Solutions"
+    },
+    {
+      "path": "/services/handyman",
+      "title": "Handyman Services Winnipeg | Seasonal Solutions"
+    },
+    {
+      "path": "/services/landscaping",
+      "title": "Winnipeg Landscaping & Lawn Care | Seasonal Solutions"
+    },
+    {
+      "path": "/services/painting",
+      "title": "Interior & Exterior Painting Winnipeg | Seasonal Solutions"
+    },
+    {
+      "path": "/services/renovation",
+      "title": "Home Renovations Winnipeg | Seasonal Solutions"
+    },
+    {
+      "path": "/services/seasonal",
+      "title": "Seasonal Home Maintenance Winnipeg | Seasonal Solutions"
+    },
+    {
+      "path": "/service-areas",
+      "title": "Winnipeg Service Areas | Seasonal Solutions"
+    },
+    {
+      "path": "/about",
+      "title": "About Seasonal Solutions | Winnipeg Home Services"
+    },
+    {
+      "path": "/our-work",
+      "title": "Our Home-Service Approach | Seasonal Solutions Winnipeg"
+    },
+    {
+      "path": "/blog",
+      "title": "Winnipeg Home Tips & Project Notes | Seasonal Solutions"
+    },
+    {
+      "path": "/blog/:slug",
+      "title": "Home Tips & Project Notes | Seasonal Solutions"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact a Winnipeg Handyman | Seasonal Solutions"
+    },
+    { "path": "/privacy", "title": "Privacy Policy | Seasonal Solutions" },
+    { "path": "/terms", "title": "Website Terms | Seasonal Solutions" },
+    { "path": "/pay/:token", "title": "Secure Payment | Seasonal Solutions" },
+    {
+      "path": "/admin",
+      "title": "Private Owner Dashboard | Seasonal Solutions"
+    },
+    { "path": "/admin/leads", "title": "Private Leads | Seasonal Solutions" },
+    {
+      "path": "/admin/customers",
+      "title": "Private Customers | Seasonal Solutions"
+    },
+    {
+      "path": "/admin/follow-ups",
+      "title": "Private Follow-Ups | Seasonal Solutions"
+    },
+    {
+      "path": "/admin/content",
+      "title": "Private Content Studio | Seasonal Solutions"
+    },
+    {
+      "path": "/admin/payments",
+      "title": "Private Payments | Seasonal Solutions"
+    },
+    {
+      "path": "/admin/integrations",
+      "title": "Private Integrations | Seasonal Solutions"
+    }
+  ]
+}

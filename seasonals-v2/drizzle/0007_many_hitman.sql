@@ -1,0 +1,1 @@
+ALTER TABLE `jobs` ADD `bookedAt` timestamp(3);
