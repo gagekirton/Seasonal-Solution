@@ -20,7 +20,7 @@ React + Vite + wouter (client) · Express (server, REST under `/api`) · tRPC on
 pnpm install
 pnpm dev            # dev server (PORT, default 3000)
 pnpm check          # tsc --noEmit
-pnpm test           # vitest (13 files, 83 tests at v2)
+pnpm test           # vitest (14 files, 92 tests after T1)
 pnpm build          # vite build + esbuild server
 pnpm db:push        # drizzle-kit generate + migrate (schema changes)
 ```
@@ -86,7 +86,7 @@ Admin routes to know: `/api/admin/me`, `/dashboard`, `/alerts`, `/logout`, `/lea
 - Env vars: `DATABASE_URL`, `MANUS_JWT_SECRET`, `MANUS_API_URL`, `MANUS_API_KEY`, `MANUS_OAUTH_API_URL`, `MANUS_PROJECT_ID`, `OWNER_OPEN_ID`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `QUICKBOOKS_CLIENT_ID`, `QUICKBOOKS_CLIENT_SECRET`.
 - Uploads go to Manus storage and are served from `/manus-storage/...`. Cover images are validated to that prefix. Leaving Manus means replacing storage, login and every image URL.
 - Session cookie is `SameSite=None` (needed for the preview iframe); sessions last a year. See NEXT-TASKS T4.
-- `SITE_ORIGIN` (`shared/site.ts`) is hardcoded to `https://www.seasonalsolutions.online`. Until the domain is live, canonical URLs, sitemap, robots and the social image point there. See NEXT-TASKS T1.
+- `SITE_ORIGIN` (`shared/site.ts`) reads the server environment variable `SITE_ORIGIN`, with `https://www.seasonalsolutions.online` as fallback; whitespace and trailing slashes are removed. Set it to the intended public origin before starting the server. Canonical URLs, structured data, sitemap, robots and the social image derive from it, never from the request Host. `robots.txt` is now served by `server/sitemap.ts`; the static file was removed. T1 is complete in the separate v2 folder; deployment configuration has not been changed.
 
 ## 8. Needs the owner (code cannot fix)
 

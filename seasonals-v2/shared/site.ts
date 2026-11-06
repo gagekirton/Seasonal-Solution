@@ -1,9 +1,13 @@
 /**
  * HANDOFF: SINGLE SOURCE OF TRUTH for business facts: contact details, services, areas, page titles/descriptions, redirects.
  * Edit facts here only. Never invent credentials, reviews, addresses or service areas (HANDOFF.md section 5).
- * SITE_ORIGIN below is hardcoded and not live yet (NEXT-TASKS T1). client/public/manus-routes.json duplicates titles.
+ * SITE_ORIGIN uses the server environment with the existing domain as fallback. client/public/manus-routes.json duplicates titles.
  */
-export const SITE_ORIGIN = "https://www.seasonalsolutions.online";
+export const SITE_ORIGIN = (
+  (typeof process !== "undefined"
+    ? process.env.SITE_ORIGIN?.trim()
+    : undefined) || "https://www.seasonalsolutions.online"
+).replace(/\/+$/, "");
 export const BUSINESS = {
   name: "Seasonal Solutions",
   phoneDisplay: "(204) 990-3247",

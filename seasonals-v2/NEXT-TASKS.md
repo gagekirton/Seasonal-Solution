@@ -7,6 +7,7 @@ Do one task per session. Start each with: "Read HANDOFF.md first. Then:" followe
 **Where:** `shared/site.ts` (`SITE_ORIGIN`), `server/seo.ts` (also the hardcoded `SOCIAL_IMAGE`), `server/sitemap.ts`, `client/public/robots.txt`.
 **Prompt:** Make `SITE_ORIGIN` come from an env var `SITE_ORIGIN` with the current value as fallback. Serve `robots.txt` dynamically so its Sitemap line uses it, and build the social image URL from it. Do not change any page copy.
 **Done when:** with `SITE_ORIGIN=https://example.test`, canonical, `og:url`, sitemap and robots all use it; add a test for `buildSeoHead` and `buildSitemap`.
+**Status:** Completed 2026-11-05 in the separate v2 working folder. `pnpm check && pnpm test && pnpm build` pass (92 tests). No GitHub transfer or production deployment; configure the intended `SITE_ORIGIN` before deployment. T2 is next, not started.
 
 ## T2. Stop indexing empty pages
 **Why:** `/blog` (no posts yet) and `/our-work` (no work to show) are in the sitemap as thin pages.

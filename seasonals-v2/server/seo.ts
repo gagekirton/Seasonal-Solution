@@ -1,6 +1,6 @@
 /**
  * HANDOFF: Head tags and JSON-LD for public pages.
- * - Every absolute URL derives from SITE_ORIGIN (hardcoded in shared/site.ts): NEXT-TASKS T1.
+ * - Every absolute URL derives from the configured SITE_ORIGIN in shared/site.ts, including the social image.
  * - Do not add addresses, ratings, reviews or credentials to structured data unless verified by the owner.
  * - areaServed lists communities the owner must confirm (HANDOFF.md section 8).
  */

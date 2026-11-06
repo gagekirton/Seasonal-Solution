@@ -1,5 +1,6 @@
 /**
- * HANDOFF: sitemap.xml: public indexable paths plus published posts. Admin and /pay pages must never appear.
+ * HANDOFF: sitemap.xml and robots.txt use the configured SITE_ORIGIN. Public indexable paths plus published posts only.
+ * Admin and /pay pages must never appear in the sitemap; preserve robots exclusions.
  * /blog and /our-work are thin until they have content (NEXT-TASKS T2).
  */
 import type { Express } from "express";
@@ -43,7 +44,20 @@ export async function buildSitemap(): Promise<string> {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
 }
 
+export function buildRobots(): string {
+  return `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin/\nDisallow: /pay/\nSitemap: ${SITE_ORIGIN}/sitemap.xml\n`;
+}
+
 export function registerSitemapRoute(app: Express) {
+  app.get("/robots.txt", (_req, res) => {
+    res
+      .status(200)
+      .set({
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "public, max-age=300",
+      })
+      .send(buildRobots());
+  });
   app.get("/sitemap.xml", (_req, res, next) => {
     void buildSitemap()
       .then(xml => {
