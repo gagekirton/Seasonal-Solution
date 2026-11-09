@@ -34,6 +34,9 @@ img { display: block; max-width: 100%; }
 .topline-inner { min-height: 35px; display: flex; justify-content: space-between; align-items: center; }
 .topline-inner > span, .topline-inner > a { display: inline-flex; align-items: center; gap: 9px; }
 .topline-inner a { color: #fff; font-weight: 600; }
+.topline-links { display: flex; align-items: center; gap: 22px; }
+.topline-links a { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.topline-owner { min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #d99f4b; box-shadow: 0 0 0 3px rgba(217,159,75,.15); }
 .site-header { background: rgba(250,249,245,.96); border-bottom: 1px solid rgba(26,56,47,.08); position: relative; z-index: 10; }
 .header-inner { display: flex; justify-content: space-between; align-items: center; min-height: 82px; }
@@ -333,8 +336,9 @@ h1 em, h2 em { color: #9a703e; font-style: italic; }
 @media (max-width: 700px) {
   .wrap { width: min(100% - 38px, 560px); }
   .topline-inner { min-height: 34px; font-size: 9px; }
-  .topline-inner > span { gap: 7px; }
+  .topline-inner > span { display: none; }
   .topline-inner > a { gap: 6px; }
+  .topline-links { width: 100%; justify-content: space-between; gap: 14px; font-size: 11px; }
   .header-inner { min-height: 69px; }
   .brand-mark { width: 36px; height: 36px; flex-basis: 36px; }
   .brand-name { font-size: 14px; }

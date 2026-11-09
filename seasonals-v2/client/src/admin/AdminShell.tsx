@@ -68,7 +68,7 @@ const NAV: Array<{
 type Access =
   | { state: "checking" }
   | { state: "allowed"; name: string }
-  | { state: "denied" }
+  | { state: "denied"; status: 401 | 403 }
   | { state: "error"; message: string };
 
 let cachedAccess: Promise<Access> | null = null;
@@ -82,7 +82,7 @@ function loadAccess(): Promise<Access> {
         error instanceof ApiError &&
         (error.status === 401 || error.status === 403)
       )
-        return { state: "denied" } as Access;
+        return { state: "denied", status: error.status } as Access;
       return {
         state: "error",
         message:
@@ -109,11 +109,35 @@ function useAccess() {
   return { access, retry: () => setAttempt(value => value + 1) };
 }
 
-function Gate({ access, retry }: { access: Access; retry: () => void }) {
+export function OwnerAccessGate({
+  access,
+  retry,
+}: {
+  access: Access;
+  retry: () => void;
+}) {
   if (access.state === "checking")
     return (
       <div className="admin-state">
         <span className="loader-dot" /> Checking owner access…
+      </div>
+    );
+  if (access.state === "denied" && access.status === 403)
+    return (
+      <div className="admin-state admin-denied">
+        <ShieldCheck size={26} />
+        <h2>Owner access needs to be confirmed</h2>
+        <p>
+          We could not confirm owner access for this session. If you have
+          already signed in, the website must be linked to your Manus owner
+          account. Resetting a Google password will not grant dashboard access.
+        </p>
+        <button className="button button-primary" type="button" onClick={retry}>
+          Check access again
+        </button>
+        <p>
+          <a href="/">Back to website</a>
+        </p>
       </div>
     );
   if (access.state === "denied")
@@ -122,16 +146,16 @@ function Gate({ access, retry }: { access: Access; retry: () => void }) {
         <ShieldCheck size={26} />
         <h2>Sign in to manage Seasonal Solutions</h2>
         <p>
-          The dashboard is restricted to the configured owner account or an
-          explicitly granted administrator. Signing in with any other account
-          will not reveal business data.
+          Use the same Manus account you use for this website project. On the
+          next screen, choose your usual sign-in method; Google is optional.
+          Only the configured owner or an approved administrator can enter.
         </p>
         <button
           className="button button-primary"
           type="button"
           onClick={() => startLogin()}
         >
-          Sign in <ArrowUpRight size={16} />
+          Continue with Manus <ArrowUpRight size={16} />
         </button>
       </div>
     );
@@ -401,7 +425,7 @@ export function AdminFrame({
           {access.state === "allowed" ? (
             children
           ) : (
-            <Gate access={access} retry={retry} />
+            <OwnerAccessGate access={access} retry={retry} />
           )}
         </main>
       </div>

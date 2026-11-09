@@ -20,7 +20,7 @@ React + Vite + wouter (client) · Express (server, REST under `/api`) · tRPC on
 pnpm install
 pnpm dev            # dev server (PORT, default 3000)
 pnpm check          # tsc --noEmit
-pnpm test           # vitest (14 files, 92 tests after T1)
+pnpm test           # vitest (15 files, 102 tests after owner-entry fix)
 pnpm build          # vite build + esbuild server
 pnpm db:push        # drizzle-kit generate + migrate (schema changes)
 ```
@@ -53,7 +53,7 @@ Admin routes to know: `/api/admin/me`, `/dashboard`, `/alerts`, `/logout`, `/lea
 
 1. **Quote**: form → `POST /api/quote` (honeypot, rate limit, zod, payment-card detector) → `createLeadWithCustomer` (one customer per normalized email, one lead per request) → owner alert.
 2. **Payment**: owner creates a payment request on a job → customer opens `/pay/<token>` → Stripe Checkout → **webhook** records the payment in the `payments` ledger (idempotent via `stripe_events`) → owner alert → optional QuickBooks push. The browser redirect never marks anything paid.
-3. **Admin access**: Manus OAuth login → signed session cookie → every `/api/admin/*` route goes through `adminRoute`. Admin = `OWNER_OPEN_ID` or role `admin`.
+3. **Admin access**: `Owner dashboard` in the public top bar or footer → `/admin` → Manus OAuth login → signed session cookie → fixed return to `/admin`. Every `/api/admin/*` route goes through `adminRoute`. Admin = `OWNER_OPEN_ID` or role `admin`; signing in alone never grants that role. HTTP 403 shows an access-confirmation message instead of another sign-in loop (tests: `server/ownerEntry.test.ts`).
 
 ## 5. Invariants: do NOT break these
 

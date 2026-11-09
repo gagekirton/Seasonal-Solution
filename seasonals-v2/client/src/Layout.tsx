@@ -6,7 +6,15 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
-import { ArrowUpRight, ChevronRight, Mail, Menu, Phone, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  ChevronRight,
+  LayoutDashboard,
+  Mail,
+  Menu,
+  Phone,
+  X,
+} from "lucide-react";
 import { BUSINESS, SERVICES } from "../../shared/site";
 import type { PageData } from "../../shared/content";
 import { Brand } from "./Brand";
@@ -62,9 +70,14 @@ function Header() {
             <span className="status-dot" /> Serving Winnipeg & nearby
             communities
           </span>
-          <a href={`tel:${BUSINESS.phone}`}>
-            <Phone size={14} /> {BUSINESS.phoneDisplay}
-          </a>
+          <div className="topline-links">
+            <a className="topline-owner" href="/admin" rel="nofollow">
+              <LayoutDashboard size={14} aria-hidden="true" /> Owner dashboard
+            </a>
+            <a href={`tel:${BUSINESS.phone}`}>
+              <Phone size={14} /> {BUSINESS.phoneDisplay}
+            </a>
+          </div>
         </div>
       </div>
       <header className="site-header">
@@ -158,7 +171,7 @@ function Footer() {
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
           <a href="/admin" rel="nofollow">
-            Owner login
+            Owner dashboard
           </a>
         </div>
         <span>Serving Winnipeg & area</span>
