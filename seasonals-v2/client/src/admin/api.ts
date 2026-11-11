@@ -6,7 +6,7 @@ import { SERVICES } from "../../../shared/site";
 
 export function authHeaders(): Record<string, string> {
   try {
-    const raw = sessionStorage.getItem("manus-cookie");
+    const raw = sessionStorage.getItem("app-session-token");
     const cookie = raw
       ?.split(";")
       .map(part => part.trim())

@@ -13,8 +13,8 @@ import express, {
 } from "express";
 import { createServer } from "http";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
-import { publicPlatformScript } from "./publicConfig";
+import { registerAuthRoutes } from "./auth";
+import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
@@ -144,12 +144,6 @@ async function startServer() {
     next();
   });
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
-  app.get("/api/platform/config.js", (_req, res) => {
-    res
-      .set("Cache-Control", "no-store")
-      .type("application/javascript")
-      .send(publicPlatformScript());
-  });
 
   // HANDOFF: Public quote endpoint. Order is deliberate: honeypot (silent 202), then rate limit, validation and the
   // HANDOFF: payment-card detector. Do not store the client IP.
@@ -243,7 +237,8 @@ async function startServer() {
   registerStripeRoutes(app);
   registerQuickbooksRoutes(app);
   registerCrmRoutes(app);
-  registerOAuthRoutes(app);
+  registerAuthRoutes(app);
+  registerStorageProxy(app);
   app.use(
     "/api/trpc",
     createExpressMiddleware({ router: appRouter, createContext })

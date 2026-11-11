@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import nodemailer from "nodemailer";
 import { ENV } from "./env";
 
 export type NotificationPayload = {
@@ -12,16 +13,6 @@ const CONTENT_MAX_LENGTH = 20000;
 const trimValue = (value: string): string => value.trim();
 const isNonEmptyString = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
-
-const buildEndpointUrl = (baseUrl: string): string => {
-  const normalizedBase = baseUrl.endsWith("/")
-    ? baseUrl
-    : `${baseUrl}/`;
-  return new URL(
-    "webdevtoken.v1.WebDevService/SendNotification",
-    normalizedBase
-  ).toString();
-};
 
 const validatePayload = (input: NotificationPayload): NotificationPayload => {
   if (!isNonEmptyString(input.title)) {
@@ -58,57 +49,44 @@ const validatePayload = (input: NotificationPayload): NotificationPayload => {
 };
 
 /**
- * Dispatches a project-owner notification through the Manus Notification Service.
- * Returns `true` if the request was accepted, `false` when the upstream service
- * cannot be reached (callers can fall back to email/slack). Validation errors
- * bubble up as TRPC errors so callers can fix the payload.
+ * Emails a notification to the site owner using the app's own SMTP settings
+ * (SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS / SMTP_FROM, recipient
+ * ALERT_EMAIL_TO or OWNER_EMAIL). Returns `true` when the mail server accepted
+ * the message. When email is not configured the alert is logged and `false` is
+ * returned, so callers keep working — owner alerts are best-effort by design.
+ * Validation errors bubble up as TRPC errors so callers can fix the payload.
  */
 export async function notifyOwner(
   payload: NotificationPayload
 ): Promise<boolean> {
   const { title, content } = validatePayload(payload);
 
-  if (!ENV.forgeApiUrl) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service URL is not configured.",
-    });
+  const to = ENV.alertEmailTo || ENV.ownerEmail;
+  if (!ENV.smtpHost || !to) {
+    console.warn(
+      `[Notification] Email alerts are not configured (set SMTP_HOST and ALERT_EMAIL_TO); dropping alert: ${title}`
+    );
+    return false;
   }
-
-  if (!ENV.forgeApiKey) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service API key is not configured.",
-    });
-  }
-
-  const endpoint = buildEndpointUrl(ENV.forgeApiUrl);
 
   try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        authorization: `Bearer ${ENV.forgeApiKey}`,
-        "content-type": "application/json",
-        "connect-protocol-version": "1",
-      },
-      body: JSON.stringify({ title, content }),
+    const transport = nodemailer.createTransport({
+      host: ENV.smtpHost,
+      port: ENV.smtpPort,
+      secure: ENV.smtpPort === 465,
+      auth: ENV.smtpUser
+        ? { user: ENV.smtpUser, pass: ENV.smtpPass }
+        : undefined,
     });
-
-    if (!response.ok) {
-      const detail = await response.text().catch(() => "");
-      console.warn(
-        `[Notification] Failed to notify owner (${response.status} ${response.statusText})${
-          detail ? `: ${detail}` : ""
-        }`
-      );
-      return false;
-    }
-
+    await transport.sendMail({
+      from: ENV.smtpFrom || ENV.smtpUser || "alerts@seasonalsolutions.online",
+      to,
+      subject: title,
+      text: content,
+    });
     return true;
   } catch (error) {
-    console.warn("[Notification] Error calling notification service:", error);
+    console.warn("[Notification] Failed to email the owner:", error);
     return false;
   }
 }

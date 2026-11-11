@@ -43,14 +43,13 @@ import {
   usePage,
 } from "./Layout";
 import { BlogIndexPage, BlogPostPage, PostStrip } from "./BlogPages";
+import { LoginPage } from "./LoginPage";
 import { PayPage } from "./PayPage";
 import { trackPageView } from "./tracking";
 import React from "react";
 
-const heroImage =
-  "/manus-storage/async-images/Mk7Dt1tol3hLeW8dXmCNHF/image-1.webp";
-const handymanImage =
-  "/manus-storage/async-images/Mk7Dt1tol3hLeW8dXmCNHF/image-2.webp";
+const heroImage = "/images/hero.jpg";
+const handymanImage = "/images/handyman.jpg";
 
 const serviceIcons = [Hammer, Leaf, Paintbrush, Sparkles, Compass];
 
@@ -1195,6 +1194,7 @@ function AdminPlaceholder() {
 function PublicPage({ pathname }: { pathname: string }) {
   const { data } = usePage();
   if (pathname.startsWith("/admin")) return <AdminPlaceholder />;
+  if (pathname === "/login") return <LoginPage />;
   if (BLOG_POST_PATH.test(pathname))
     return data.post ? <BlogPostPage /> : <NotFoundPage />;
   if (PAY_PATH.test(pathname))

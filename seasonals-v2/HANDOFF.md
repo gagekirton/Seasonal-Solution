@@ -14,13 +14,13 @@ Success = the owner gets real quote requests, replies fast, gets paid, and never
 
 ## 2. Stack and commands
 
-React + Vite + wouter (client) · Express (server, REST under `/api`) · tRPC only for `auth.*` and `system.*` · Drizzle + MySQL · Stripe Checkout (CAD) · QuickBooks Online · Manus platform (OAuth login, `/manus-storage/` files, owner notifications). Public CSS: `client/src/index.css`. Admin CSS: `client/src/dashboard.css` (custom, not Tailwind components).
+React + Vite + wouter (client) · Express (server, REST under `/api`) · tRPC only for `auth.*` and `system.*` · Drizzle + MySQL · Stripe Checkout (CAD) · QuickBooks Online · self-hosted platform (email + password owner login, `/manus-storage/` files on local disk, owner alerts by SMTP email — see section 10). Public CSS: `client/src/index.css`. Admin CSS: `client/src/dashboard.css` (custom, not Tailwind components).
 
 ```
 pnpm install
 pnpm dev            # dev server (PORT, default 3000)
 pnpm check          # tsc --noEmit
-pnpm test           # vitest (15 files, 102 tests after owner-entry fix)
+pnpm test           # vitest (15 files, 104 tests after the 2026-11-11 rebuild)
 pnpm build          # vite build + esbuild server
 pnpm db:push        # drizzle-kit generate + migrate (schema changes)
 ```
@@ -53,7 +53,7 @@ Admin routes to know: `/api/admin/me`, `/dashboard`, `/alerts`, `/logout`, `/lea
 
 1. **Quote**: form → `POST /api/quote` (honeypot, rate limit, zod, payment-card detector) → `createLeadWithCustomer` (one customer per normalized email, one lead per request) → owner alert.
 2. **Payment**: owner creates a payment request on a job → customer opens `/pay/<token>` → Stripe Checkout → **webhook** records the payment in the `payments` ledger (idempotent via `stripe_events`) → owner alert → optional QuickBooks push. The browser redirect never marks anything paid.
-3. **Admin access**: `Owner dashboard` in the public top bar or footer → `/admin` → Manus OAuth login → signed session cookie → fixed return to `/admin`. Every `/api/admin/*` route goes through `adminRoute`. Admin = `OWNER_OPEN_ID` or role `admin`; signing in alone never grants that role. HTTP 403 shows an access-confirmation message instead of another sign-in loop (tests: `server/ownerEntry.test.ts`).
+3. **Admin access**: `Owner dashboard` in the public top bar or footer → `/admin` → `/login` (email + password, `POST /api/auth/login`) → signed session cookie → return to `/admin`. Every `/api/admin/*` route goes through `adminRoute`. Admin = `OWNER_OPEN_ID` or role `admin`; signing in alone never grants that role. HTTP 403 shows an access-confirmation message instead of another sign-in loop (tests: `server/ownerEntry.test.ts`).
 
 ## 5. Invariants: do NOT break these
 
@@ -83,9 +83,9 @@ Admin routes to know: `/api/admin/me`, `/dashboard`, `/alerts`, `/logout`, `/lea
 
 ## 7. Platform facts
 
-- Env vars: `DATABASE_URL`, `MANUS_JWT_SECRET`, `MANUS_API_URL`, `MANUS_API_KEY`, `MANUS_OAUTH_API_URL`, `MANUS_PROJECT_ID`, `OWNER_OPEN_ID`, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `QUICKBOOKS_CLIENT_ID`, `QUICKBOOKS_CLIENT_SECRET`.
-- Uploads go to Manus storage and are served from `/manus-storage/...`. Cover images are validated to that prefix. Leaving Manus means replacing storage, login and every image URL.
-- Session cookie is `SameSite=None` (needed for the preview iframe); sessions last a year. See NEXT-TASKS T4.
+- Env vars: see `.env.example` — `DATABASE_URL`, `JWT_SECRET`, `APP_ID`, `SITE_ORIGIN`, `OWNER_EMAIL`, `OWNER_PASSWORD` (first-run bootstrap only), `OWNER_OPEN_ID`, `STORAGE_DIR`, `SMTP_*` + `ALERT_EMAIL_TO` (owner alerts), `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `QUICKBOOKS_CLIENT_ID`, `QUICKBOOKS_CLIENT_SECRET`.
+- Uploads are written to local disk under `STORAGE_DIR` and served from `/manus-storage/...` (the route path is kept from the template so stored URLs keep working). Cover images are validated to that prefix.
+- Session cookie is `SameSite=Lax`, `Secure` on HTTPS requests; sessions last a year. `auth.me` never returns the stored password hash.
 - `SITE_ORIGIN` (`shared/site.ts`) reads the server environment variable `SITE_ORIGIN`, with `https://www.seasonalsolutions.online` as fallback; whitespace and trailing slashes are removed. Set it to the intended public origin before starting the server. Canonical URLs, structured data, sitemap, robots and the social image derive from it, never from the request Host. `robots.txt` is now served by `server/sitemap.ts`; the static file was removed. T1 is complete in the separate v2 folder; deployment configuration has not been changed.
 
 ## 8. Needs the owner (code cannot fix)
@@ -95,3 +95,15 @@ Confirmed list of jobs actually offered · which communities are truly served ·
 ## 9. Habits that produce bad results here
 
 Rewriting whole files or regenerating from the template · "improving" payment, consent or auth code without tests · removing a safeguard to make a feature work · reformatting unrelated files · adding libraries casually · inventing business facts to fill a page · reporting success without running the checks · changing several unrelated things in one pass.
+
+## 10. The 2026-11-11 rebuild (Manus platform removed)
+
+The Manus project was deleted by the owner when he switched providers; its database and file storage were not recoverable, and the v2 app had never served the live domain, so no production data was lost. The app now runs entirely on owned infrastructure (branch `claude-rebuild`):
+
+- **Sign-in**: Manus OAuth → local email + password (`server/_core/auth.ts`, `password.ts`). Passwords are scrypt hashes in `users.passwordHash` (migration `0008_add_users_password_hash`). Sessions are still the same locally signed JWT cookie (`server/_core/sdk.ts`), now keyed by `JWT_SECRET` and bound to `APP_ID`. First run: set `OWNER_EMAIL` + `OWNER_PASSWORD` and sign in once — the owner account is created and the hash stored; afterwards the env password can be removed.
+- **Database**: any MySQL the owner controls via `DATABASE_URL` (the code was already portable Drizzle/MySQL). Migrations 0000–0008 apply cleanly with `pnpm db:migrate`.
+- **Files**: Forge S3 → local disk (`server/storage.ts`, `STORAGE_DIR`), served by `server/_core/storageProxy.ts` under the same `/manus-storage/*` path. On a host without a persistent disk, point `STORAGE_DIR` at a mounted volume.
+- **Owner alerts**: Forge notifications → SMTP email (`server/_core/notification.ts`, nodemailer). Unconfigured email degrades to a logged warning; alerts stay best-effort.
+- **Removed as dead code**: the Forge LLM / image generation / voice transcription / data API / maps / heartbeat modules and the Vite debug-collector + platform-config plugins. `axios` was dropped; `nodemailer` added.
+- **Public images**: the two template images that lived in Manus storage were replaced by the owner's media pack — `client/public/images/hero.jpg` and `handyman.jpg`; the SEO social image points at `/images/hero.jpg`.
+- Verified 2026-11-11: `pnpm check`, `pnpm test` (104) and `pnpm build` green, plus a local MySQL 8 boot test (migrations applied, owner bootstrap login, quote → lead + customer rows, storage serving + traversal guard).

@@ -6,7 +6,7 @@ export type LeadAdminIdentity = Pick<User, "openId" | "role"> & {
 
 /**
  * Public contact details are never an authorization credential. Site access is
- * granted by an explicitly configured Manus identity or an admin role.
+ * granted by an explicitly configured owner identity or an admin role.
  */
 export function canAccessLeadInbox(
   user: LeadAdminIdentity,

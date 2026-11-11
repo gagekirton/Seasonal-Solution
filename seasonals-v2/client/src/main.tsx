@@ -57,7 +57,7 @@ if (privateRoute) {
           // Cross-site Preview can block cookies. The runtime mirrors its own
           // session into sessionStorage for the existing bearer-token fallback.
           try {
-            const raw = sessionStorage.getItem("manus-cookie");
+            const raw = sessionStorage.getItem("app-session-token");
             const prefix = `${COOKIE_NAME}=`;
             const pair = raw
               ?.split(";")

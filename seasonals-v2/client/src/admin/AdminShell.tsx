@@ -129,8 +129,8 @@ export function OwnerAccessGate({
         <h2>Owner access needs to be confirmed</h2>
         <p>
           We could not confirm owner access for this session. If you have
-          already signed in, the website must be linked to your Manus owner
-          account. Resetting a Google password will not grant dashboard access.
+          already signed in, this browser is not signed in as the website's
+          owner or an approved administrator.
         </p>
         <button className="button button-primary" type="button" onClick={retry}>
           Check access again
@@ -146,16 +146,15 @@ export function OwnerAccessGate({
         <ShieldCheck size={26} />
         <h2>Sign in to manage Seasonal Solutions</h2>
         <p>
-          Use the same Manus account you use for this website project. On the
-          next screen, choose your usual sign-in method; Google is optional.
-          Only the configured owner or an approved administrator can enter.
+          Sign in with the owner email and password for this website. Only
+          the configured owner or an approved administrator can enter.
         </p>
         <button
           className="button button-primary"
           type="button"
           onClick={() => startLogin()}
         >
-          Continue with Manus <ArrowUpRight size={16} />
+          Continue to sign in <ArrowUpRight size={16} />
         </button>
       </div>
     );
@@ -299,7 +298,7 @@ async function signOut() {
     // Clear the local token and leave anyway.
   }
   try {
-    sessionStorage.removeItem("manus-cookie");
+    sessionStorage.removeItem("app-session-token");
   } catch {
     // Nothing stored.
   }

@@ -1,7 +1,7 @@
 /**
  * HANDOFF: Blog and media admin endpoints.
  * - Uploads are signature-checked and size-limited but EXIF/GPS metadata is NOT stripped (NEXT-TASKS T5).
- * - Cover images must be /manus-storage/ URLs (Manus-hosted); leaving Manus means replacing storage.
+ * - Cover images must be /manus-storage/ URLs, served by the app's own storage (server/storage.ts).
  */
 import express, { type Express } from "express";
 import { randomUUID } from "crypto";

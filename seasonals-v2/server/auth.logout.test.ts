@@ -18,7 +18,8 @@ function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] }
     openId: "sample-user",
     email: "sample@example.com",
     name: "Sample User",
-    loginMethod: "manus",
+    loginMethod: "password",
+    passwordHash: "scrypt:test-only-hash",
     role: "user",
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -41,6 +42,21 @@ function createAuthContext(): { ctx: TrpcContext; clearedCookies: CookieCall[] }
   return { ctx, clearedCookies };
 }
 
+describe("auth.me", () => {
+  it("never exposes the stored password hash", async () => {
+    const { ctx } = createAuthContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.auth.me();
+
+    expect(result).toMatchObject({
+      openId: "sample-user",
+      email: "sample@example.com",
+    });
+    expect(result).not.toHaveProperty("passwordHash");
+  });
+});
+
 describe("auth.logout", () => {
   it("clears the session cookie and reports success", async () => {
     const { ctx, clearedCookies } = createAuthContext();
@@ -54,7 +70,7 @@ describe("auth.logout", () => {
     expect(clearedCookies[0]?.options).toMatchObject({
       maxAge: -1,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
       httpOnly: true,
       path: "/",
     });

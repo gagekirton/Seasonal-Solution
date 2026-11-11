@@ -18,7 +18,7 @@ import {
 } from "../shared/site";
 import { BLOG_POST_PATH, PAY_PATH } from "../shared/content";
 
-const SOCIAL_IMAGE = `${SITE_ORIGIN}/manus-storage/async-images/Mk7Dt1tol3hLeW8dXmCNHF/image-1.webp`;
+const SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero.jpg`;
 const SOCIAL_IMAGE_ALT =
   "Illustrative image of a welcoming Winnipeg home and landscaped front yard";
 const ORG_ID = `${SITE_ORIGIN}/#organization`;

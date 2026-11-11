@@ -1,12 +1,14 @@
 /**
  * HANDOFF: AES-GCM encryption for stored integration tokens.
- * The key is derived from MANUS_JWT_SECRET. If that secret changes, stored tokens become unreadable and
- * QuickBooks must be reconnected. A dedicated key would be safer (optional hardening).
+ * The key is derived from JWT_SECRET (MANUS_JWT_SECRET is still honoured as a
+ * fallback for tokens sealed before the 2026-11-11 rebuild). If that secret
+ * changes, stored tokens become unreadable and QuickBooks must be reconnected.
+ * A dedicated key would be safer (optional hardening).
  */
 import { createCipheriv, createDecipheriv, hkdfSync, randomBytes } from "crypto";
 
 function key(): Buffer {
-  const secret = process.env.MANUS_JWT_SECRET ?? "";
+  const secret = process.env.JWT_SECRET ?? process.env.MANUS_JWT_SECRET ?? "";
   if (!secret) throw new Error("Token encryption secret is not configured");
   return Buffer.from(
     hkdfSync("sha256", secret, "seasonal-solutions", "integration-token-v1", 32)

@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   InsertLead,
@@ -74,6 +74,29 @@ export async function getUserByOpenId(openId: string) {
     .where(eq(users.openId, openId))
     .limit(1);
   return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(users)
+    .where(sql`lower(${users.email}) = ${email.trim().toLowerCase()}`)
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function setUserPasswordHash(
+  openId: string,
+  passwordHash: string
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db
+    .update(users)
+    .set({ passwordHash })
+    .where(eq(users.openId, openId));
 }
 
 export async function createLead(lead: InsertLead): Promise<void> {

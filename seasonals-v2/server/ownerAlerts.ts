@@ -1,5 +1,5 @@
 /**
- * HANDOFF: Best-effort owner notifications via the Manus notification service (failures are swallowed).
+ * HANDOFF: Best-effort owner notifications by email (failures are swallowed).
  * Messages include customer names and contact details: keep them minimal and never include card data.
  */
 import { SERVICES } from "../shared/site";

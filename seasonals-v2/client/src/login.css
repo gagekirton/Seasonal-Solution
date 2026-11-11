@@ -1,0 +1,77 @@
+/* Owner sign-in page (see LoginPage.tsx). Self-contained so the page renders
+   the same in the public bundle without the dashboard stylesheet. */
+.login-wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: var(--paper, #f7f5f0);
+}
+
+.login-card {
+  width: min(400px, 100%);
+  background: #fff;
+  border: 1px solid rgba(22, 63, 53, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(22, 63, 53, 0.12);
+  padding: 32px 28px;
+  display: grid;
+  gap: 16px;
+}
+
+.login-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--spruce, #163f35);
+}
+
+.login-title {
+  margin: -8px 0 4px;
+  font-family: var(--serif, "DM Serif Display", serif);
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--spruce-dark, #163f35);
+}
+
+.login-field {
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--spruce-dark, #163f35);
+}
+
+.login-field input {
+  font: inherit;
+  font-weight: 400;
+  padding: 11px 12px;
+  border: 1px solid rgba(22, 63, 53, 0.25);
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+}
+
+.login-field input:focus {
+  outline: 2px solid rgba(22, 63, 53, 0.45);
+  outline-offset: 1px;
+}
+
+.login-error {
+  margin: 0;
+  font-size: 14px;
+  color: #a4271f;
+}
+
+.login-submit {
+  justify-content: center;
+  width: 100%;
+}
+
+.login-back {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+}
