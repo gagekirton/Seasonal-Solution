@@ -622,3 +622,42 @@ h1 em, h2 em { color: #9a703e; font-style: italic; }
   .showcase-grid { grid-template-columns: 1fr; gap: 40px; }
   .promo-frame { max-height: 420px; }
 }
+
+
+/* Lead magnet: checklist band, checklist page, print view */
+.magnet-band { background: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 64px 0; }
+.magnet-band-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.magnet-band h2 { color: var(--spruce-dark); font-family: var(--serif); font-size: 32px; line-height: 1.1; margin: 12px 0 10px; }
+.magnet-band p { color: #5d685f; font-size: 14px; line-height: 1.65; max-width: 560px; }
+.magnet-band .button { flex-shrink: 0; }
+.checklist-top { padding: 70px 0 10px; }
+.checklist-top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(36px, 5vw, 72px); align-items: start; }
+.checklist-intro h2 { color: var(--spruce-dark); font-family: var(--serif); font-size: 30px; line-height: 1.15; margin-bottom: 16px; }
+.checklist-intro p { color: #5d685f; font-size: 14px; line-height: 1.7; margin-bottom: 14px; max-width: 480px; }
+.checklist-intro .button { margin-top: 8px; }
+.checklist-form .form-grid { grid-template-columns: 1fr; }
+.checklist-season { padding: 56px 0; }
+.checklist-season-alt { background: #f2f0e7; }
+.checklist-season-head { max-width: 640px; margin-bottom: 30px; }
+.checklist-season-head h2 { color: var(--spruce-dark); font-family: var(--serif); font-size: 36px; margin: 12px 0 10px; }
+.checklist-season-head p { color: #5d685f; font-size: 14px; line-height: 1.7; }
+.checklist-items { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 34px; }
+.checklist-items li { display: flex; gap: 13px; padding: 15px 17px; background: var(--white); border: 1px solid var(--line); }
+.checklist-season-alt .checklist-items li { background: #fbfaf6; }
+.check-box { flex: none; width: 17px; height: 17px; margin-top: 2px; border: 1.5px solid var(--spruce); border-radius: 3px; }
+.checklist-items b { color: var(--ink); font-size: 13.5px; display: block; margin-bottom: 4px; }
+.checklist-items p { color: #687268; font-size: 12.5px; line-height: 1.6; }
+@media (max-width: 700px) {
+  .magnet-band { padding: 48px 0; }
+  .magnet-band-inner { flex-direction: column; align-items: flex-start; gap: 22px; }
+  .checklist-top { padding: 48px 0 4px; }
+  .checklist-top-grid { grid-template-columns: 1fr; }
+  .checklist-items { grid-template-columns: 1fr; }
+  .checklist-season { padding: 42px 0; }
+}
+@media print {
+  .site-header, .site-footer, .magnet-band, .quote-band, .checklist-form, .no-print, .page-side-note { display: none !important; }
+  .checklist-season, .checklist-season-alt { background: #fff; padding: 22px 0; }
+  .checklist-items li { break-inside: avoid; }
+  body { background: #fff; }
+}

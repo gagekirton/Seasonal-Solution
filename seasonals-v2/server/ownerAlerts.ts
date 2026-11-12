@@ -2,8 +2,14 @@
  * HANDOFF: Best-effort owner notifications by email (failures are swallowed).
  * Messages include customer names and contact details: keep them minimal and never include card data.
  */
-import { SERVICES } from "../shared/site";
-import { notifyOwner } from "./_core/notification";
+import {
+  BUSINESS,
+  CHECKLIST,
+  CHECKLIST_TITLE,
+  SERVICES,
+  SITE_ORIGIN,
+} from "../shared/site";
+import { notifyOwner, sendEmail } from "./_core/notification";
 
 function serviceLabel(slug: string) {
   return SERVICES.find(service => service.slug === slug)?.label ?? slug;
@@ -80,4 +86,56 @@ export function alertWebhookFailure(event: { id: string; type: string }) {
       "Check the Stripe dashboard and /admin/payments, and record the payment manually if needed. Stripe will keep retrying for a few days.",
     ].join("\n")
   );
+}
+
+export function alertChecklistSignup(signup: { name: string; email: string }) {
+  void safeNotify(`New checklist signup — ${signup.name}`, [
+    "Lead magnet: The Winnipeg Seasonal Home Checklist",
+    `Name: ${signup.name}`,
+    `Email: ${signup.email}`,
+    "",
+    "They are saved in the lead inbox as a seasonal maintenance lead.",
+    "Open the dashboard: /admin/leads",
+  ].join("\n"));
+}
+
+function checklistEmailText(name: string): string {
+  const seasons = CHECKLIST.map(block =>
+    [
+      `${block.season.toUpperCase()} — ${block.timing}`,
+      ...block.items.map((item, index) => `${index + 1}. ${item.title} — ${item.detail}`),
+    ].join("\n")
+  ).join("\n\n");
+  return [
+    `Hi ${name},`,
+    "",
+    `Here is your copy of ${CHECKLIST_TITLE} — forty jobs, four seasons, written for Winnipeg homes.`,
+    `You can also read and print it any time: ${SITE_ORIGIN}/checklist`,
+    "",
+    seasons,
+    "",
+    "Rather hand the list over? Seasonal Solutions' seasonal maintenance service works through exactly this list — request a quote at " +
+      `${SITE_ORIGIN}/contact or call ${BUSINESS.phoneDisplay}.`,
+    "",
+    "You asked to receive this checklist and a short reminder when each season turns. Reply to this email to unsubscribe.",
+    "",
+    "— Seasonal Solutions, Winnipeg",
+  ].join("\n");
+}
+
+/** Emails the subscriber their checklist copy; best-effort, never throws. */
+export function emailChecklistCopy(signup: { name: string; email: string }) {
+  void (async () => {
+    try {
+      await sendEmail(signup.email, {
+        title: `Your copy: ${CHECKLIST_TITLE}`,
+        content: checklistEmailText(signup.name),
+      });
+    } catch (error) {
+      console.warn(
+        "[Alerts] Checklist copy email failed:",
+        error instanceof Error ? error.message : "unknown error"
+      );
+    }
+  })();
 }

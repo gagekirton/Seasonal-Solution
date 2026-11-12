@@ -27,7 +27,11 @@ import { registerDashboardRoutes } from "../dashboardRoutes";
 import { registerStripeRoutes, registerStripeWebhook } from "../stripeRoutes";
 import { registerQuickbooksRoutes } from "../quickbooksRoutes";
 import { registerSitemapRoute } from "../sitemap";
-import { alertNewLead } from "../ownerAlerts";
+import {
+  alertChecklistSignup,
+  alertNewLead,
+  emailChecklistCopy,
+} from "../ownerAlerts";
 import { SERVICES } from "../../shared/site";
 import { z } from "zod";
 import { containsPaymentCredentials } from "../inputSafety";
@@ -62,6 +66,40 @@ const quoteSchema = z
     utmMedium: z.string().trim().max(120).optional().default(""),
     utmCampaign: z.string().trim().max(160).optional().default(""),
     website: z.string().max(300).optional().default(""),
+  })
+  .strict()
+  .refine(
+    value => !containsPaymentCredentials(value),
+    "Do not include payment credentials."
+  );
+
+const attributionFields = {
+  landingPath: z
+    .string()
+    .trim()
+    .max(255)
+    .refine(
+      value =>
+        value === "" ||
+        (value.startsWith("/") &&
+          !value.startsWith("//") &&
+          !/[?#\u0000-\u001f]/.test(value))
+    )
+    .optional()
+    .default(""),
+  utmSource: z.string().trim().max(120).optional().default(""),
+  utmMedium: z.string().trim().max(120).optional().default(""),
+  utmCampaign: z.string().trim().max(160).optional().default(""),
+  website: z.string().max(300).optional().default(""),
+};
+
+const checklistSchema = z
+  .object({
+    name: z.string().trim().min(2).max(100),
+    email: z.string().trim().email().max(320),
+    consent: z.literal(true),
+    marketingOptIn: z.boolean().optional().default(true),
+    ...attributionFields,
   })
   .strict()
   .refine(
@@ -225,6 +263,89 @@ async function startServer() {
         res.status(503).json({
           error:
             "The request could not be saved right now. Please call or email Seasonal Solutions instead.",
+        });
+      }
+    })
+  );
+
+  // Lead magnet signup: same guards as /api/quote (honeypot, rate limit,
+  // validation, payment-card detector). Saves a seasonal lead, alerts the
+  // owner and emails the subscriber their checklist copy (best-effort).
+  app.post(
+    "/api/checklist",
+    asyncRoute(async (req, res) => {
+      setPrivateResponse(res);
+      const incoming =
+        req.body && typeof req.body === "object"
+          ? (req.body as Record<string, unknown>)
+          : {};
+      if (
+        typeof incoming.website === "string" &&
+        incoming.website.trim().length > 0
+      ) {
+        res.status(202).json({ success: true });
+        return;
+      }
+      if (isRateLimited(req)) {
+        res.status(429).json({
+          error:
+            "Too many requests. Please try again later or call Seasonal Solutions directly.",
+        });
+        return;
+      }
+      const parsed = checklistSchema.safeParse(incoming);
+      if (!parsed.success) {
+        res
+          .status(400)
+          .json({ error: "Please check the required fields and try again." });
+        return;
+      }
+      const sourcePath = (() => {
+        try {
+          const referrer = req.get("referer");
+          const path = referrer
+            ? new URL(referrer).pathname.slice(0, 255)
+            : null;
+          return containsPaymentCredentials(path) ? null : path;
+        } catch {
+          return null;
+        }
+      })();
+      try {
+        await createLeadWithCustomer(
+          {
+            name: parsed.data.name,
+            email: parsed.data.email,
+            phone: null,
+            service: "seasonal",
+            area: null,
+            projectType: "residential",
+            details:
+              "Lead magnet — requested the free Winnipeg Seasonal Home Checklist by email.",
+            consentAt: new Date(),
+            sourcePath,
+            landingPath: parsed.data.landingPath || null,
+            utmSource: parsed.data.utmSource || null,
+            utmMedium: parsed.data.utmMedium || null,
+            utmCampaign: parsed.data.utmCampaign || null,
+            status: "new",
+          },
+          parsed.data.marketingOptIn
+        );
+        res.status(201).json({ success: true });
+        alertChecklistSignup({
+          name: parsed.data.name,
+          email: parsed.data.email,
+        });
+        emailChecklistCopy({ name: parsed.data.name, email: parsed.data.email });
+      } catch (error) {
+        console.error(
+          "[Checklist] Could not save a checklist signup:",
+          error instanceof Error ? error.message : "unknown error"
+        );
+        res.status(503).json({
+          error:
+            "The signup could not be saved right now. The full checklist is on this page — or call or email Seasonal Solutions instead.",
         });
       }
     })

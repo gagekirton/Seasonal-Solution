@@ -268,3 +268,24 @@ export function QuoteBand({
     </section>
   );
 }
+
+export function ChecklistBand() {
+  return (
+    <section className="magnet-band">
+      <div className="wrap magnet-band-inner">
+        <div>
+          <Eyebrow mark="✓">Free homeowner resource</Eyebrow>
+          <h2>The Winnipeg Seasonal Home Checklist</h2>
+          <p>
+            Forty jobs, four seasons — the list that keeps small jobs from
+            becoming expensive ones. Read it online, print it for the fridge,
+            or get a copy by email.
+          </p>
+        </div>
+        <a className="button button-primary" href="/checklist">
+          Get the free checklist <ArrowUpRight size={17} />
+        </a>
+      </div>
+    </section>
+  );
+}

@@ -121,3 +121,21 @@ The owner's full media pack (site-assets: 14 images, 4 videos, logo) is now plac
 - **SEO**: the social share image is `/images/og-share.jpg`.
 
 Images of the operator are AI-generated from his photos with his consent and are labelled illustrative on the site; they are not photos of completed jobs. Alt texts describe the actual images.
+
+## 12. Lead magnet: the Winnipeg Seasonal Home Checklist (2026-11-12)
+
+The first Hormozi build (plan: `workspace/goals/seasonal-solutions-site/files/hormozi-website-additions.md`).
+
+- **Page `/checklist`** (`ChecklistPage` in `client/src/App.tsx`): the full checklist on-page —
+  40 items across spring/summer/fall/winter, content data in `shared/site.ts` (`CHECKLIST`),
+  page meta registered there too (so it is in the sitemap). Print button + print stylesheet.
+- **Signup `POST /api/checklist`** (inline in `server/_core/index.ts`, same guards as
+  `/api/quote`): saves a `seasonal` lead via `createLeadWithCustomer`, alerts the owner
+  (`alertChecklistSignup`) and emails the subscriber the checklist text (`emailChecklistCopy`
+  in `server/ownerAlerts.ts`, via the new `sendEmail` export in `server/_core/notification.ts` —
+  same SMTP transport and best-effort rules as owner alerts).
+- **CTA bands**: `ChecklistBand` (in `client/src/Layout.tsx`) sits on the home page after the
+  services section and at the end of every blog post.
+- Verified 2026-11-12: check + 104 tests + build green; local MySQL boot test — page SSR,
+  sitemap entry, signup 201 with lead + customer rows and marketing consent stamped,
+  honeypot 202, invalid email 400, quote endpoint unaffected.

@@ -12,6 +12,7 @@ import {
 import {
   ArrowLink,
   Breadcrumbs,
+  ChecklistBand,
   Eyebrow,
   QuoteBand,
   SiteLayout,
@@ -281,6 +282,7 @@ export function BlogPostPage() {
             </aside>
           </div>
         </article>
+        <ChecklistBand />
         <PostStrip
           posts={data.related}
           title="More from the job list"

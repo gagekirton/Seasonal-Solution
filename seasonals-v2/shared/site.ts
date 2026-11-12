@@ -332,6 +332,19 @@ const meta: Record<string, PageMeta> = {
     ],
     canonicalPath: "/blog",
   },
+  "/checklist": {
+    title: "The Winnipeg Seasonal Home Checklist | Seasonal Solutions",
+    description:
+      "Forty seasonal home jobs for Winnipeg homeowners — spring, summer, fall and winter — free from Seasonal Solutions. Read it online, print it, or get it by email.",
+    keywords: [
+      "Winnipeg seasonal home checklist",
+      "Winnipeg home maintenance checklist",
+      "fall cleanup checklist Winnipeg",
+      "winter home preparation Manitoba",
+      "spring home maintenance Winnipeg",
+    ],
+    canonicalPath: "/checklist",
+  },
   "/privacy": {
     title: "Privacy Policy | Seasonal Solutions",
     description:
@@ -448,3 +461,254 @@ export function isAdminPath(pathname: string): boolean {
   const path = normalizePath(pathname);
   return path === "/admin" || path.startsWith("/admin/");
 }
+
+/**
+ * The Winnipeg Seasonal Home Checklist — the site's lead magnet.
+ * A complete, genuinely useful list; keeping it current is a content task,
+ * not a code change. Seasonal Solutions can do any item on request
+ * (the seasonal maintenance service covers the list).
+ */
+export type ChecklistItem = { title: string; detail: string };
+export type ChecklistSeason = {
+  season: string;
+  timing: string;
+  intro: string;
+  items: ChecklistItem[];
+};
+
+export const CHECKLIST_TITLE = "The Winnipeg Seasonal Home Checklist";
+
+export const CHECKLIST: ChecklistSeason[] = [
+  {
+    season: "Spring",
+    timing: "March to May · as the snow melts",
+    intro:
+      "Winnipeg winters hide a lot. Spring is when you find out what the freeze did — and when a small fix is still small.",
+    items: [
+      {
+        title: "Test the sump pump",
+        detail:
+          "Pour a bucket of water into the pit and watch it kick on. Meltwater plus spring rain is when Winnipeg basements flood.",
+      },
+      {
+        title: "Clear the eavestroughs and downspouts",
+        detail:
+          "Winter leaves them full of ice and grit. Downspouts should carry water at least six feet from the foundation.",
+      },
+      {
+        title: "Walk the foundation",
+        detail:
+          "Freeze-thaw opens new cracks every year. Mark any you find and watch them through the season.",
+      },
+      {
+        title: "Check the roof from the ground",
+        detail:
+          "Look for lifted, curled or missing shingles after winter winds. Binoculars beat a ladder.",
+      },
+      {
+        title: "Restart the outdoor taps",
+        detail:
+          "Open them slowly and check the wall inside for leaks — a pipe that froze over winter will tell you now.",
+      },
+      {
+        title: "Service the air conditioner",
+        detail:
+          "Clean or replace the filter and clear the outdoor unit before the first hot week, not during it.",
+      },
+      {
+        title: "Rake out the lawn once it is dry",
+        detail:
+          "Pull up matted, snow-mouldy patches, then overseed bare spots while spring moisture lasts.",
+      },
+      {
+        title: "Clean the dryer vent line",
+        detail:
+          "Lint plus a winter of heavy loads is a fire risk and the reason drying takes two cycles.",
+      },
+      {
+        title: "Test smoke and CO detectors",
+        detail:
+          "Fresh batteries, and check the expiry date printed on the carbon monoxide alarm itself.",
+      },
+      {
+        title: "Book spring cleanup early",
+        detail:
+          "Yards cleaned up in May recover faster — and spring routes fill up fast.",
+      },
+    ],
+  },
+  {
+    season: "Summer",
+    timing: "June to August · growth season",
+    intro:
+      "Everything grows, including the repair list. Summer is for keeping up — and for the exterior jobs that need dry weather.",
+    items: [
+      {
+        title: "Mow high",
+        detail:
+          "Cut at 8–9 cm. Taller grass shades out weeds and grows deeper roots for dry spells.",
+      },
+      {
+        title: "Water deep, early, and less often",
+        detail:
+          "A long morning soak beats daily sprinkles that keep roots shallow.",
+      },
+      {
+        title: "Check caulking and weatherstripping",
+        detail:
+          "Summer storms find every gap. Look at windows, doors and where siding meets trim.",
+      },
+      {
+        title: "Change the furnace filter",
+        detail:
+          "The fan runs all summer for air conditioning too. A clogged filter makes it work harder at both jobs.",
+      },
+      {
+        title: "Walk the deck and fence",
+        detail:
+          "Loose boards, popped nails and soft spots at ground level are easier to fix now than after rot spreads.",
+      },
+      {
+        title: "Trim branches off the roof",
+        detail:
+          "Keep limbs clear of shingles. Anything touching the power service line itself is Manitoba Hydro's job — call them.",
+      },
+      {
+        title: "Wash the siding and walkways",
+        detail:
+          "Algae and mildew get slippery and eat paint. Summer is pressure-washing weather.",
+      },
+      {
+        title: "Look in the attic hatch",
+        detail:
+          "Check for signs of pests, leaks around vents, and insulation that has shifted or flattened.",
+      },
+      {
+        title: "Seal driveway and walkway cracks",
+        detail:
+          "Small cracks sealed now stay small; the fall freeze will widen whatever you leave.",
+      },
+      {
+        title: "Plan fall projects now",
+        detail:
+          "Good fall calendars fill in August. The time to book a fence or deck repair is before you need it.",
+      },
+    ],
+  },
+  {
+    season: "Fall",
+    timing: "September to November · before the snow",
+    intro:
+      "Fall is the highest-stakes season in Winnipeg. Almost every expensive winter problem — ice dams, burst pipes, mice — is a fall job that did not get done.",
+    items: [
+      {
+        title: "Clean the eavestroughs after leaf fall",
+        detail:
+          "Full troughs freeze, back up under the shingles and become ice dams. This is the single best hour you can spend in October.",
+      },
+      {
+        title: "Shut off and drain exterior taps",
+        detail:
+          "Close the inside valve, open the outside tap, drain the line. Do the same for hoses and store them inside.",
+      },
+      {
+        title: "Service the furnace",
+        detail:
+          "A filter, a check-up and a test run in September beats an emergency call at −30 in January.",
+      },
+      {
+        title: "Seal where mice get in",
+        detail:
+          "A mouse needs a hole the size of a dime. Check where pipes, cables and vents pass through the walls.",
+      },
+      {
+        title: "Do the final mow and leaf cleanup",
+        detail:
+          "Leaves left on the lawn mat down under snow and kill the grass beneath. Mulch or remove them.",
+      },
+      {
+        title: "Aerate and fertilize",
+        detail:
+          "Roots grow in fall even when the top does not. Fall feeding is why some lawns green up first in spring.",
+      },
+      {
+        title: "Check roof valleys and flashing",
+        detail:
+          "The spots that will leak under snow load are visible now, while you can still fix them.",
+      },
+      {
+        title: "Start the snowblower in October",
+        detail:
+          "Fresh fuel, a test run and spare shear pins on the shelf. The first storm is the wrong day to find out.",
+      },
+      {
+        title: "Clear and cover the A/C unit",
+        detail:
+          "Brush off debris and cover the top to keep snow out of the fan. Leave the sides open so moisture can escape.",
+      },
+      {
+        title: "Book snow removal before the first snowfall",
+        detail:
+          "Routes are built in the fall. Once the snow flies, the good ones are full.",
+      },
+    ],
+  },
+  {
+    season: "Winter",
+    timing: "December to February · keep it running",
+    intro:
+      "Winter is not a project season — it is a monitoring season. A few small checks keep the house safe at −30.",
+    items: [
+      {
+        title: "Change the furnace filter monthly",
+        detail:
+          "In deep cold the furnace runs almost constantly. A fresh filter is cheaper than a service call.",
+      },
+      {
+        title: "Keep exterior vents clear of snow",
+        detail:
+          "Furnace, dryer and HRV vents blocked by drifts can push carbon monoxide back into the house. Clear them after every big snowfall.",
+      },
+      {
+        title: "Watch for ice dams",
+        detail:
+          "Thick ice at the roof edge and icicles in new places mean heat is escaping. Rake snow off the bottom edge if you can do it safely from the ground.",
+      },
+      {
+        title: "Protect pipes on exterior walls",
+        detail:
+          "During cold snaps, open the cabinet doors under sinks — and know where your main water shutoff is before you ever need it.",
+      },
+      {
+        title: "Keep the gas meter reachable",
+        detail:
+          "Clear a path and brush snow off gently. The meter reader — and emergency crews — need access.",
+      },
+      {
+        title: "Clear snow from basement window wells",
+        detail:
+          "Snow piled against egress windows blocks an exit and melts against the foundation in spring.",
+      },
+      {
+        title: "Watch window condensation",
+        detail:
+          "Heavy frost on the inside of windows means indoor humidity is too high for the temperature. Run the HRV or a bathroom fan.",
+      },
+      {
+        title: "Run ceiling fans on low, reversed",
+        detail:
+          "Clockwise at low speed pushes pooled warm air back down where you can feel it.",
+      },
+      {
+        title: "Feel for drafts at the attic hatch",
+        detail:
+          "A poor seal leaks heated air all winter — and that escaping heat is what feeds ice dams.",
+      },
+      {
+        title: "Book spring work early",
+        detail:
+          "January is when smart homeowners book spring cleanups and repairs. You will get your pick of dates.",
+      },
+    ],
+  },
+];

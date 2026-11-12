@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import {
   BUSINESS,
+  CHECKLIST,
   NEARBY_COMMUNITIES,
   SERVICES,
   WINNIPEG_NEIGHBOURHOODS,
@@ -39,6 +40,7 @@ import {
   Eyebrow,
   PageContext,
   QuoteBand,
+  ChecklistBand,
   SiteLayout,
   usePage,
 } from "./Layout";
@@ -204,6 +206,7 @@ function HomePage() {
           </span>
         </div>
         <ServicesSection />
+        <ChecklistBand />
         <section className="split-story">
           <div className="wrap split-story-inner">
             <div className="story-image">
@@ -1116,6 +1119,246 @@ function QuoteForm() {
   );
 }
 
+type ChecklistValues = {
+  name: string;
+  email: string;
+  consent: boolean;
+  landingPath: string;
+  utmSource: string;
+  utmMedium: string;
+  utmCampaign: string;
+  website: string;
+};
+const emptyChecklist: ChecklistValues = {
+  name: "",
+  email: "",
+  consent: false,
+  landingPath: "",
+  utmSource: "",
+  utmMedium: "",
+  utmCampaign: "",
+  website: "",
+};
+
+function ChecklistForm() {
+  const [values, setValues] = useState<ChecklistValues>(emptyChecklist);
+  const [state, setState] = useState<{
+    kind: "idle" | "sending" | "success" | "error";
+    message: string;
+  }>({ kind: "idle", message: "" });
+  useEffect(() => {
+    setValues(previous => ({ ...previous, ...getSessionAttribution() }));
+  }, []);
+  const set = (key: keyof ChecklistValues, value: string | boolean) =>
+    setValues(previous => ({ ...previous, [key]: value }));
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (state.kind === "sending") return;
+    setState({ kind: "sending", message: "Adding you to the list…" });
+    try {
+      const response = await fetch("/api/checklist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ...values, marketingOptIn: values.consent }),
+      });
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(
+          result.error || "We couldn't add you. Please try again."
+        );
+      setValues({ ...emptyChecklist, ...getSessionAttribution() });
+      setState({
+        kind: "success",
+        message:
+          "You're in — your copy is on its way by email, and the full checklist is right here on this page.",
+      });
+    } catch (error) {
+      setState({
+        kind: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "We couldn't add you. Please try again.",
+      });
+    }
+  }
+  return (
+    <form className="quote-form checklist-form" onSubmit={submit}>
+      <div className="form-heading">
+        <span>FREE BY EMAIL</span>
+        <h2>Get the checklist by email.</h2>
+        <p>
+          Your copy, plus a short reminder when each season turns. The full
+          list is also right here on this page.
+        </p>
+      </div>
+      <div className="form-grid">
+        <label>
+          Full name <b>*</b>
+          <input
+            autoComplete="name"
+            name="name"
+            required
+            minLength={2}
+            maxLength={100}
+            value={values.name}
+            onChange={event => set("name", event.target.value)}
+            placeholder="Your name"
+          />
+        </label>
+        <label>
+          Email address <b>*</b>
+          <input
+            autoComplete="email"
+            name="email"
+            required
+            type="email"
+            maxLength={320}
+            value={values.email}
+            onChange={event => set("email", event.target.value)}
+            placeholder="you@example.com"
+          />
+        </label>
+      </div>
+      <label className="honeypot" aria-hidden="true">
+        Leave this field empty
+        <input
+          tabIndex={-1}
+          autoComplete="off"
+          name="website"
+          value={values.website}
+          onChange={event => set("website", event.target.value)}
+        />
+      </label>
+      <label className="consent-row">
+        <input
+          type="checkbox"
+          required
+          checked={values.consent}
+          onChange={event => set("consent", event.target.checked)}
+        />
+        <span>
+          Email me the checklist and a short reminder when each season turns.
+          No spam — unsubscribe anytime.
+        </span>
+      </label>
+      {state.message && (
+        <div
+          className={`form-message form-${state.kind}`}
+          role={state.kind === "error" ? "alert" : "status"}
+          aria-live="polite"
+        >
+          {state.message}
+        </div>
+      )}
+      <div className="form-submit">
+        <button
+          className="button button-primary"
+          type="submit"
+          disabled={state.kind === "sending"}
+        >
+          {state.kind === "sending" ? "Sending…" : "Email me the checklist"}{" "}
+          <ArrowUpRight size={17} />
+        </button>
+      </div>
+      <p className="form-privacy">
+        Your details join the Seasonal Solutions customer list so we can send
+        the checklist and seasonal reminders. See our{" "}
+        <a href="/privacy">privacy notice</a>.
+      </p>
+    </form>
+  );
+}
+
+function ChecklistPage() {
+  return (
+    <SiteLayout>
+      <main id="main" className="inner-page">
+        <section className="page-hero">
+          <div className="wrap page-hero-inner">
+            <Breadcrumbs current="Seasonal checklist" />
+            <div className="page-hero-grid">
+              <div>
+                <Eyebrow mark="✓">Free homeowner resource</Eyebrow>
+                <h1>
+                  The Winnipeg
+                  <br />
+                  <em>Seasonal Home</em> Checklist
+                </h1>
+                <p className="page-lede">
+                  Forty jobs, four seasons — the list that keeps small jobs
+                  from becoming expensive ones in a Winnipeg climate.
+                </p>
+              </div>
+              <p className="page-side-note">
+                Written for Winnipeg homes: freeze-thaw, ice dams, snow load
+                and −30 cold snaps included. Work through it yourself, or
+                hand the whole list to Seasonal Solutions.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section className="checklist-top">
+          <div className="wrap checklist-top-grid">
+            <div className="checklist-intro">
+              <h2>Small jobs, caught early, stay small.</h2>
+              <p>
+                Almost every expensive home repair starts as a cheap seasonal
+                job that got skipped — a full eavestrough becomes an ice dam,
+                an undrained tap becomes a burst pipe. This checklist is the
+                whole year on four short lists.
+              </p>
+              <p>
+                Read it here, print it for the fridge, or get a copy by email
+                with a reminder when each season turns.
+              </p>
+              <button
+                type="button"
+                className="button button-quiet no-print"
+                onClick={() => window.print()}
+              >
+                Print the checklist <ArrowUpRight size={16} />
+              </button>
+            </div>
+            <ChecklistForm />
+          </div>
+        </section>
+        {CHECKLIST.map((block, index) => (
+          <section
+            key={block.season}
+            className={`checklist-season${index % 2 ? " checklist-season-alt" : ""}`}
+          >
+            <div className="wrap">
+              <div className="checklist-season-head">
+                <Eyebrow mark={`0${index + 1}`}>{block.timing}</Eyebrow>
+                <h2>{block.season}</h2>
+                <p>{block.intro}</p>
+              </div>
+              <ul className="checklist-items">
+                {block.items.map(item => (
+                  <li key={item.title}>
+                    <span className="check-box" aria-hidden="true" />
+                    <div>
+                      <b>{item.title}</b>
+                      <p>{item.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ))}
+        <QuoteBand
+          title="Rather hand us the list?"
+          text="Seasonal maintenance works through exactly this checklist — spring, summer, fall and winter, handled."
+          href="/contact?service=seasonal"
+        />
+      </main>
+    </SiteLayout>
+  );
+}
+
 function ContactPage({ quoteOnly = false }: { quoteOnly?: boolean }) {
   return (
     <SiteLayout>
@@ -1394,6 +1637,8 @@ function PublicPage({ pathname }: { pathname: string }) {
       return <WorkPage />;
     case "/blog":
       return <BlogIndexPage />;
+    case "/checklist":
+      return <ChecklistPage />;
     case "/contact":
       return <ContactPage />;
     case "/privacy":
