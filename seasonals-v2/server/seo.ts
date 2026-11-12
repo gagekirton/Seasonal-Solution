@@ -18,9 +18,9 @@ import {
 } from "../shared/site";
 import { BLOG_POST_PATH, PAY_PATH } from "../shared/content";
 
-const SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero.jpg`;
+const SOCIAL_IMAGE = `${SITE_ORIGIN}/images/og-share.jpg`;
 const SOCIAL_IMAGE_ALT =
-  "Illustrative image of a welcoming Winnipeg home and landscaped front yard";
+  "Seasonal Solutions operator clearing a snowy Winnipeg driveway at dusk";
 const ORG_ID = `${SITE_ORIGIN}/#organization`;
 
 function escapeAttribute(value: string): string {

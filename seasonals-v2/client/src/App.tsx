@@ -59,6 +59,14 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   const Icon = serviceIcons[index] ?? Hammer;
   return (
     <article className="service-card">
+      <div className="service-card-media">
+        <img
+          src={service.image}
+          alt={service.imageAlt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
       <div className="service-card-top">
         <span className="service-icon">
           <Icon size={21} strokeWidth={1.7} />
@@ -106,6 +114,32 @@ function ServicesSection({ compact = false }: { compact?: boolean }) {
   );
 }
 
+function HeroVisual() {
+  const [motionOk, setMotionOk] = useState(false);
+  useEffect(() => {
+    setMotionOk(
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
+  const alt =
+    "Seasonal Solutions operator with a snowblower in a snowy Winnipeg driveway at dusk";
+  if (motionOk) {
+    return (
+      <video
+        src="/videos/hero-snow.mp4"
+        poster={heroImage}
+        autoPlay
+        muted
+        loop
+        playsInline
+        role="img"
+        aria-label={alt}
+      />
+    );
+  }
+  return <img src={heroImage} fetchPriority="high" alt={alt} />;
+}
+
 function HomePage() {
   const { data } = usePage();
   return (
@@ -141,11 +175,7 @@ function HomePage() {
               </div>
             </div>
             <figure className="hero-visual">
-              <img
-                src={heroImage}
-                fetchPriority="high"
-                alt="Illustrative image of a welcoming home and landscaped front yard"
-              />
+              <HeroVisual />
               <span className="image-stamp">
                 LOCAL
                 <br />
@@ -294,6 +324,18 @@ function ServicePage({ service }: { service: Service }) {
             </a>
           </div>
         </section>
+        <div className="wrap">
+          <figure className="service-banner">
+            <img
+              src={service.image}
+              alt={service.imageAlt}
+              fetchPriority="high"
+            />
+            <figcaption className="media-caption">
+              Illustrative image · Not a completed Seasonal Solutions project
+            </figcaption>
+          </figure>
+        </div>
         <section className="service-detail">
           <div className="wrap detail-grid">
             <aside className="detail-aside">
@@ -335,6 +377,58 @@ function ServicePage({ service }: { service: Service }) {
                   ))}
                 </ul>
               </div>
+              {service.slug === "landscaping" && (
+                <figure className="detail-media">
+                  <video
+                    src="/videos/lawn.mp4"
+                    poster="/images/service-lawn.jpg"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    aria-label="Seasonal Solutions operator mowing a lawn"
+                  />
+                  <figcaption className="media-caption">
+                    Illustrative clip · Lawn care through the season
+                  </figcaption>
+                </figure>
+              )}
+              {service.slug === "seasonal" && (
+                <div className="season-strip">
+                  {[
+                    {
+                      src: "/images/service-spring.jpg",
+                      label: "Spring cleanup",
+                      alt: "Seasonal Solutions operator doing a spring yard cleanup",
+                    },
+                    {
+                      src: "/images/service-fall.jpg",
+                      label: "Fall cleanup",
+                      alt: "Seasonal Solutions operator with a backpack leaf blower in autumn",
+                    },
+                    {
+                      src: "/images/service-eavestrough.jpg",
+                      label: "Eavestroughs",
+                      alt: "Seasonal Solutions operator cleaning eavestroughs from a ladder",
+                    },
+                    {
+                      src: "/images/service-pressure.jpg",
+                      label: "Pressure washing",
+                      alt: "Seasonal Solutions operator pressure washing a driveway",
+                    },
+                  ].map(item => (
+                    <figure key={item.label}>
+                      <img
+                        src={item.src}
+                        alt={item.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <figcaption>{item.label}</figcaption>
+                    </figure>
+                  ))}
+                </div>
+              )}
               <section className="detail-local">
                 <Eyebrow mark="02">Local service</Eyebrow>
                 <h3>{service.label} in Winnipeg, Manitoba</h3>
@@ -506,6 +600,17 @@ function AboutPage() {
           <div className="wrap about-grid">
             <aside>
               <Eyebrow mark="01">Our approach</Eyebrow>
+              <figure className="about-portrait">
+                <img
+                  src="/images/portrait-about.jpg"
+                  alt="Portrait of the Seasonal Solutions operator in winter work gear"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption className="media-caption">
+                  Illustrative image
+                </figcaption>
+              </figure>
               <p className="about-aside-copy">
                 Start with a clear description of the work and a useful
                 conversation about the scope.
@@ -567,6 +672,43 @@ function AboutPage() {
   );
 }
 
+function BeforeAfter() {
+  const [pos, setPos] = useState(50);
+  return (
+    <div className="ba-block">
+      <div className="ba-compare">
+        <img
+          className="ba-img"
+          src="/images/gallery-after.jpg"
+          alt="Yard after a cleanup (illustrative)"
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          className="ba-img ba-before"
+          src="/images/gallery-before.jpg"
+          alt="Yard before a cleanup (illustrative)"
+          loading="lazy"
+          decoding="async"
+          style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
+        />
+        <span className="ba-tag ba-tag-before">Before</span>
+        <span className="ba-tag ba-tag-after">After</span>
+        <span className="ba-divider" style={{ left: `${pos}%` }} />
+      </div>
+      <input
+        className="ba-range"
+        type="range"
+        min={0}
+        max={100}
+        value={pos}
+        onChange={event => setPos(Number(event.target.value))}
+        aria-label="Slide to compare the before and after images"
+      />
+    </div>
+  );
+}
+
 function WorkPage() {
   const { data } = usePage();
   return (
@@ -624,10 +766,41 @@ function WorkPage() {
             </p>
           </div>
         </section>
+        <section className="work-showcase">
+          <div className="wrap showcase-grid">
+            <div>
+              <Eyebrow mark="02">Before / after</Eyebrow>
+              <h2>The difference a cleanup makes.</h2>
+              <BeforeAfter />
+              <p className="editorial-note">
+                Illustrative images — a sample yard cleanup, not a completed
+                Seasonal Solutions project.
+              </p>
+            </div>
+            <div className="promo-block">
+              <Eyebrow mark="03">In motion</Eyebrow>
+              <div className="promo-frame">
+                <video
+                  src="/videos/promo.mp4"
+                  poster="/images/service-fall.jpg"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-label="Seasonal Solutions in 15 seconds: snow removal, lawn care and fall cleanup"
+                />
+              </div>
+              <p className="editorial-note">
+                Seasonal Solutions in 15 seconds — snow, lawn and fall
+                cleanup.
+              </p>
+            </div>
+          </div>
+        </section>
         <PostStrip
           posts={data.posts}
           title="Recent project notes"
-          mark="02"
+          mark="04"
           eyebrow="Project notes"
         />
         <QuoteBand
@@ -1015,6 +1188,14 @@ function ContactPage({ quoteOnly = false }: { quoteOnly?: boolean }) {
                 Share your Winnipeg neighbourhood or nearby community with the
                 project details so availability can be confirmed.
               </p>
+              <figure className="contact-photo">
+                <img
+                  src="/images/service-fall.jpg"
+                  alt="Seasonal Solutions operator doing a fall yard cleanup with a backpack leaf blower"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
             </aside>
             <QuoteForm />
           </div>

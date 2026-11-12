@@ -21,6 +21,8 @@ export const BUSINESS = {
 export type Service = {
   slug: string;
   label: string;
+  image: string;
+  imageAlt: string;
   short: string;
   title: string;
   summary: string;
@@ -34,6 +36,9 @@ export const SERVICES: Service[] = [
   {
     slug: "handyman",
     label: "Handyman services",
+    image: "/images/service-handyman.jpg",
+    imageAlt:
+      "Seasonal Solutions operator in a black T-shirt and navy work pants, tattoo sleeves visible, ready for repair work",
     short: "General repairs, installations and home maintenance.",
     title: "Winnipeg Handyman Services",
     summary:
@@ -56,6 +61,9 @@ export const SERVICES: Service[] = [
   {
     slug: "landscaping",
     label: "Landscaping & lawn care",
+    image: "/images/service-lawn.jpg",
+    imageAlt:
+      "Seasonal Solutions operator mowing a green lawn in summer work gear",
     short: "Landscape design, installation, maintenance and lawn care.",
     title: "Winnipeg Landscaping & Lawn Care",
     summary:
@@ -78,6 +86,8 @@ export const SERVICES: Service[] = [
   {
     slug: "painting",
     label: "Painting",
+    image: "/images/service-painting.jpg",
+    imageAlt: "Seasonal Solutions operator painting an interior wall",
     short: "Interior and exterior painting for home refreshes and projects.",
     title: "Interior & Exterior Painting in Winnipeg",
     summary:
@@ -100,6 +110,8 @@ export const SERVICES: Service[] = [
   {
     slug: "renovation",
     label: "Home renovations",
+    image: "/images/service-renovation.jpg",
+    imageAlt: "Seasonal Solutions operator at work on a home renovation",
     short: "Kitchen, bathroom and basement renovation projects.",
     title: "Home Renovations in Winnipeg",
     summary:
@@ -122,6 +134,8 @@ export const SERVICES: Service[] = [
   {
     slug: "seasonal",
     label: "Seasonal maintenance",
+    image: "/images/service-snow.jpg",
+    imageAlt: "Seasonal Solutions operator clearing snow with a snowblower",
     short: "Property upkeep planned around your seasonal to-do list.",
     title: "Seasonal Home Maintenance in Winnipeg",
     summary:

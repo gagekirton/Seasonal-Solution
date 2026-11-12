@@ -11,7 +11,7 @@ vi.mock("./contentDb", () => ({ listPublishedSlugs }));
 
 const DEFAULT_ORIGIN = "https://www.seasonalsolutions.online";
 const TEST_ORIGIN = "https://example.test";
-const IMAGE_PATH = "/images/hero.jpg";
+const IMAGE_PATH = "/images/og-share.jpg";
 
 async function loadWithOrigin(origin: string | undefined) {
   vi.stubEnv("SITE_ORIGIN", origin);

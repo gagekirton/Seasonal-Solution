@@ -105,5 +105,19 @@ The Manus project was deleted by the owner when he switched providers; its datab
 - **Files**: Forge S3 → local disk (`server/storage.ts`, `STORAGE_DIR`), served by `server/_core/storageProxy.ts` under the same `/manus-storage/*` path. On a host without a persistent disk, point `STORAGE_DIR` at a mounted volume.
 - **Owner alerts**: Forge notifications → SMTP email (`server/_core/notification.ts`, nodemailer). Unconfigured email degrades to a logged warning; alerts stay best-effort.
 - **Removed as dead code**: the Forge LLM / image generation / voice transcription / data API / maps / heartbeat modules and the Vite debug-collector + platform-config plugins. `axios` was dropped; `nodemailer` added.
-- **Public images**: the two template images that lived in Manus storage were replaced by the owner's media pack — `client/public/images/hero.jpg` and `handyman.jpg`; the SEO social image points at `/images/hero.jpg`.
+- **Public images**: the two template images that lived in Manus storage were replaced by the owner's media pack — `client/public/images/hero.jpg` and `handyman.jpg`; the SEO social image points at `/images/og-share.jpg` (updated 2026-11-11, section 11).
 - Verified 2026-11-11: `pnpm check`, `pnpm test` (104) and `pnpm build` green, plus a local MySQL 8 boot test (migrations applied, owner bootstrap login, quote → lead + customer rows, storage serving + traversal guard).
+
+## 11. Media pack wired into the public pages (2026-11-11)
+
+The owner's full media pack (site-assets: 14 images, 4 videos, logo) is now placed across the public site. Web copies live in `client/public/images/` and `client/public/videos/` (videos re-encoded to ~0.5–2 MB, muted, no audio; the gallery pair resized to 1600w). The masters stay outside the repo.
+
+- **Brand**: the header/footer mark is the business logo (`client/public/logo.svg`, the same artwork as `favicon.svg`) via `client/src/Brand.tsx`.
+- **Home**: the hero frame plays `/videos/hero-snow.mp4` (poster `hero.jpg`; still image when the visitor prefers reduced motion); each service card carries its service photo (`Service.image` / `imageAlt` in `shared/site.ts`).
+- **Service pages**: a banner photo per service; the landscaping page adds the lawn clip; the seasonal page adds a four-photo "through the year" strip (spring, fall, eavestroughs, pressure washing).
+- **About**: the operator portrait sits in the approach aside.
+- **Our Work**: an interactive before/after comparison (gallery pair, slider-controlled) beside the vertical promo clip.
+- **Contact**: a fall-cleanup photo in the aside.
+- **SEO**: the social share image is `/images/og-share.jpg`.
+
+Images of the operator are AI-generated from his photos with his consent and are labelled illustrative on the site; they are not photos of completed jobs. Alt texts describe the actual images.

@@ -578,3 +578,47 @@ h1 em, h2 em { color: #9a703e; font-style: italic; }
   .crm-search > div { flex-direction: column; }
   .crm-followup-toolbar { gap: 12px; }
 }
+
+
+/* Asset placements: brand logo, hero video, service imagery, showcases */
+.brand-mark { overflow: hidden; border: none; padding: 0; background: transparent; }
+.brand-mark img { width: 100%; height: 100%; display: block; border-radius: 50%; object-fit: cover; }
+.hero-visual video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.service-card-media { margin: -23px -20px 18px; height: 118px; overflow: hidden; background: #d5d4c6; }
+.service-card-media img { width: 100%; height: 100%; object-fit: cover; }
+.media-caption { color: #788078; font-size: 9px; letter-spacing: .03em; margin-top: 7px; }
+.service-banner { margin: 34px 0 0; }
+.service-banner img { width: 100%; height: clamp(240px, 38vw, 400px); object-fit: cover; display: block; }
+.detail-media { margin: 34px 0 8px; }
+.detail-media video { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; background: #d5d4c6; }
+.season-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 34px 0 8px; }
+.season-strip figure { margin: 0; }
+.season-strip img { width: 100%; height: 150px; object-fit: cover; display: block; }
+.season-strip figcaption { color: var(--spruce); font-size: 10px; font-weight: 700; letter-spacing: .04em; margin-top: 6px; }
+.about-portrait { margin: 22px 0 4px; max-width: 245px; }
+.about-portrait img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; }
+.work-showcase { padding: 6px 0 91px; }
+.showcase-grid { display: grid; grid-template-columns: 1.5fr .8fr; gap: clamp(40px, 6vw, 80px); align-items: start; }
+.work-showcase h2 { color: var(--spruce-dark); font-family: var(--serif); font-size: 34px; line-height: 1.1; margin: 14px 0 18px; }
+.ba-compare { position: relative; aspect-ratio: 3 / 2; overflow: hidden; background: #d5d4c6; }
+.ba-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ba-tag { position: absolute; top: 12px; z-index: 2; padding: 5px 9px; background: rgba(16, 52, 45, .85); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.ba-tag-before { left: 12px; }
+.ba-tag-after { right: 12px; }
+.ba-divider { position: absolute; top: 0; bottom: 0; z-index: 1; width: 2px; background: #fff; transform: translateX(-1px); box-shadow: 0 0 12px rgba(0, 0, 0, .35); }
+.ba-range { width: 100%; margin-top: 12px; accent-color: var(--spruce); }
+.promo-frame { margin-top: 18px; width: 100%; aspect-ratio: 9 / 16; max-height: 480px; overflow: hidden; background: var(--spruce-dark); }
+.promo-frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.contact-photo { margin: 20px 0 0; }
+.contact-photo img { width: 100%; height: 210px; object-fit: cover; display: block; }
+@media (max-width: 700px) {
+  .service-card-media { margin: -17px -15px 14px; height: 96px; }
+  .service-banner { margin-top: 24px; }
+  .service-banner img { height: 220px; }
+  .season-strip { grid-template-columns: 1fr 1fr; }
+  .season-strip img { height: 120px; }
+  .about-portrait { max-width: 200px; }
+  .work-showcase { padding-bottom: 65px; }
+  .showcase-grid { grid-template-columns: 1fr; gap: 40px; }
+  .promo-frame { max-height: 420px; }
+}
