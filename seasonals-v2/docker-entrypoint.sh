@@ -10,6 +10,8 @@ export STORAGE_DIR=/var/data/uploads
 
 if [ -n "$DATABASE_URL" ]; then
   echo "[entrypoint] Using the DATABASE_URL from the environment; skipping the local database."
+  cd /app
+  node scripts/ensure-database.cjs
 else
   DATADIR=/var/lib/mysql
   SOCKET=/run/mysqld/mysqld.sock
