@@ -11,6 +11,11 @@ export const ENV = {
   // sign-in with OWNER_EMAIL + OWNER_PASSWORD creates the owner account.
   get ownerEmail() { return process.env.OWNER_EMAIL ?? ""; },
   get ownerPassword() { return process.env.OWNER_PASSWORD ?? ""; },
+  // Second approved dashboard sign-in (for example a helper doing maintenance
+  // and assistance): when no account exists for this email yet, a sign-in
+  // with ADMIN_EMAIL + ADMIN_PASSWORD creates an admin account for it.
+  get adminEmail() { return process.env.ADMIN_EMAIL ?? ""; },
+  get adminPassword() { return process.env.ADMIN_PASSWORD ?? ""; },
   get isProduction() { return process.env.NODE_ENV === "production"; },
   // Local directory that holds uploaded files (see server/storage.ts).
   get storageDir() { return process.env.STORAGE_DIR ?? "data/uploads"; },
