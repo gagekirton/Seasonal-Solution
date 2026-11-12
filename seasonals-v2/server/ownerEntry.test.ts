@@ -218,4 +218,38 @@ describe("password sign-in", () => {
     );
     expect(mocks.createSessionToken).toHaveBeenCalled();
   });
+
+  it("bootstraps an approved admin account from the environment on first sign-in", async () => {
+    vi.stubEnv("ADMIN_EMAIL", "helper@example.com");
+    vi.stubEnv("ADMIN_PASSWORD", OWNER_PASSWORD);
+    const helperUser = {
+      ...adminUser(),
+      openId: "admin:helper@example.com",
+      name: "Admin",
+      email: "helper@example.com",
+    };
+    mocks.getUserByOpenId
+      .mockResolvedValueOnce({ ...helperUser, passwordHash: null })
+      .mockResolvedValue(helperUser);
+    const response = await attemptLogin({
+      email: "helper@example.com",
+      password: OWNER_PASSWORD,
+    });
+    expect(response.status).toBe(200);
+    expect(mocks.upsertUser).toHaveBeenCalledWith(
+      expect.objectContaining({
+        openId: "admin:helper@example.com",
+        email: "helper@example.com",
+        role: "admin",
+      })
+    );
+    expect(mocks.setUserPasswordHash).toHaveBeenCalledWith(
+      "admin:helper@example.com",
+      expect.stringMatching(/^scrypt:/)
+    );
+    expect(mocks.createSessionToken).toHaveBeenCalledWith(
+      "admin:helper@example.com",
+      expect.objectContaining({ name: "Admin" })
+    );
+  });
 });
