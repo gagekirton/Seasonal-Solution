@@ -15,9 +15,11 @@ import { sdk } from "./sdk";
  *
  * First-run bootstrap: when OWNER_EMAIL and OWNER_PASSWORD are set and no
  * password is stored yet for that email, a matching sign-in creates (or
- * claims) the owner account and stores the hash. After that the database hash
- * is the credential — OWNER_PASSWORD can be removed from the environment, and
- * the password can be rotated by updating the hash.
+ * claims) the owner account and stores the hash. A second approved sign-in
+ * works the same way via ADMIN_EMAIL and ADMIN_PASSWORD (an admin account
+ * for maintenance and assistance). After that the database hash is the
+ * credential — the environment passwords can be removed, and a password can
+ * be rotated by updating the hash.
  */
 
 const RATE_WINDOW_MS = 10 * 60 * 1000;
@@ -54,13 +56,27 @@ function noteFailure(req: Request): void {
   }
 }
 
-function matchesBootstrap(email: string, password: string): boolean {
-  return (
+type BootstrapIdentity = { email: string; openId: string; name: string };
+
+function matchBootstrap(email: string, password: string): BootstrapIdentity | null {
+  const lower = email.toLowerCase();
+  if (
     ENV.ownerEmail.length > 0 &&
     ENV.ownerPassword.length > 0 &&
-    email.toLowerCase() === ENV.ownerEmail.toLowerCase() &&
+    lower === ENV.ownerEmail.toLowerCase() &&
     password === ENV.ownerPassword
-  );
+  ) {
+    return { email: ENV.ownerEmail, openId: "owner", name: "Owner" };
+  }
+  if (
+    ENV.adminEmail.length > 0 &&
+    ENV.adminPassword.length > 0 &&
+    lower === ENV.adminEmail.toLowerCase() &&
+    password === ENV.adminPassword
+  ) {
+    return { email: ENV.adminEmail, openId: `admin:${lower}`, name: "Admin" };
+  }
+  return null;
 }
 
 export function registerAuthRoutes(app: Express) {
@@ -92,18 +108,20 @@ export function registerAuthRoutes(app: Express) {
         let user = await db.getUserByEmail(email);
 
         // First-run bootstrap / account claim: no stored password yet and the
-        // attempt matches the configured owner credentials.
-        if ((!user || !user.passwordHash) && matchesBootstrap(email, password)) {
+        // attempt matches one of the configured approved sign-ins.
+        const bootstrap =
+          !user || !user.passwordHash ? matchBootstrap(email, password) : null;
+        if (bootstrap) {
           if (!user) {
             await db.upsertUser({
-              openId: "owner",
-              name: "Owner",
-              email: ENV.ownerEmail,
+              openId: bootstrap.openId,
+              name: bootstrap.name,
+              email: bootstrap.email,
               loginMethod: "password",
               role: "admin",
               lastSignedIn: new Date(),
             });
-            user = await db.getUserByOpenId("owner");
+            user = await db.getUserByOpenId(bootstrap.openId);
           }
           if (user && !user.passwordHash) {
             await db.setUserPasswordHash(user.openId, await hashPassword(password));
