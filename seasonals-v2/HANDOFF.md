@@ -139,3 +139,21 @@ The first Hormozi build (plan: `workspace/goals/seasonal-solutions-site/files/ho
 - Verified 2026-11-12: check + 104 tests + build green; local MySQL boot test — page SSR,
   sitemap entry, signup 201 with lead + customer rows and marketing consent stamped,
   honeypot 202, invalid email 400, quote endpoint unaffected.
+
+## 13. The offer page: the Handled Home Program (2026-11-12)
+
+Second Hormozi build, after the checklist (section 12).
+
+- **Page `/offer`** (`OfferPage` in `client/src/App.tsx`, meta in `shared/site.ts`, linked from
+  the header nav as "The Program" and from the footer): outcome-led hero; the **Seasonal Home
+  Check** as the entry offer (one flat fee confirmed at booking, credited toward a first program
+  booking); the five services as a stack; **three scope tiers** — Seasonal Essentials / the
+  Handled Home Program (featured) / Handled Home Plus — so a "no" to the full program has a
+  smaller "yes"; the **Clear Scope Guarantee** (written scope + fixed price, done-right-or-we-return,
+  no surprise extras); and an "every booking includes" bonus stack (photo updates, seasonal plan,
+  priority rebooking, Home Check report).
+- **No invented prices:** tiers are scope-based and "quoted per property"; the guarantee wording
+  and the Home Check fee credit are proposals until the owner confirms them — they match how the
+  site already describes its quote process.
+- Verified 2026-11-12: check + 104 tests + build green; page SSR with all sections; sitemap
+  includes `/offer`; preview deploy verified live.

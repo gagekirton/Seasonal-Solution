@@ -1271,6 +1271,248 @@ function ChecklistForm() {
   );
 }
 
+function OfferPage() {
+  const tiers = [
+    {
+      name: "Seasonal Essentials",
+      tagline: "The two visits that prevent the expensive problems.",
+      featured: false,
+      points: [
+        "Spring cleanup visit",
+        "Fall cleanup visit",
+        "Eavestrough cleaning at both visits",
+        "The full seasonal checklist run at each visit, with a written report",
+      ],
+    },
+    {
+      name: "The Handled Home Program",
+      tagline: "The whole year, handled. Our most chosen option.",
+      featured: true,
+      points: [
+        "Everything in Seasonal Essentials",
+        "Summer lawn care through the season",
+        "Winter snow clearing through the season",
+        "Priority rebooking before routes open to new households",
+      ],
+    },
+    {
+      name: "Handled Home Plus",
+      tagline: "The full program, plus the small-fix list handled too.",
+      featured: false,
+      points: [
+        "Everything in the Handled Home Program",
+        "A bank of handyman hours each season for small fixes",
+        "Priority scheduling for painting and renovation work",
+        "One point of contact for the whole property, all year",
+      ],
+    },
+  ];
+  return (
+    <SiteLayout>
+      <main id="main" className="inner-page">
+        <section className="page-hero">
+          <div className="wrap page-hero-inner">
+            <Breadcrumbs current="The Program" />
+            <div className="page-hero-grid">
+              <div>
+                <Eyebrow mark="◈">The Handled Home Program</Eyebrow>
+                <h1>
+                  A handled home,
+                  <br />
+                  <em>every season.</em>
+                </h1>
+                <p className="page-lede">
+                  Instead of booking one job at a time and hoping the timing
+                  works out, put the whole year on one written scope: spring,
+                  summer, fall and winter, handled by the same local operator.
+                </p>
+              </div>
+              <p className="page-side-note">
+                Every home is different, so the program is quoted per
+                property — the scope and the price are fixed in writing
+                before anything is booked.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="check-offer">
+          <div className="wrap check-offer-grid">
+            <div>
+              <Eyebrow mark="01">Start here</Eyebrow>
+              <h2>The Seasonal Home Check</h2>
+              <p>
+                One visit. We walk the property with the full seasonal
+                checklist — sump pump, eavestroughs, roof, taps, furnace
+                filter, the works — and you get a written report with photos
+                and a prioritised quote for anything that needs doing.
+              </p>
+              <p>
+                One flat fee, confirmed when you book — and the fee comes off
+                your first program booking if you go ahead.
+              </p>
+              <a
+                className="button button-primary"
+                href="/contact?service=seasonal"
+              >
+                Book a Home Check <ArrowUpRight size={17} />
+              </a>
+            </div>
+            <figure className="check-offer-media">
+              <img
+                src="/images/portrait-about.jpg"
+                alt="Seasonal Solutions operator in winter work gear"
+                loading="lazy"
+                decoding="async"
+              />
+              <figcaption className="media-caption">
+                Illustrative image
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section className="offer-stack">
+          <div className="wrap">
+            <div className="section-head">
+              <Eyebrow mark="02">What's handled</Eyebrow>
+              <h2>One relationship, every job on the list.</h2>
+            </div>
+            <div className="stack-list">
+              {SERVICES.map(service => (
+                <a
+                  key={service.slug}
+                  className="stack-row"
+                  href={`/services/${service.slug}`}
+                >
+                  <b>{service.label}</b>
+                  <span>{service.summary}</span>
+                  <ArrowUpRight size={17} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="offer-tiers">
+          <div className="wrap">
+            <div className="section-head">
+              <Eyebrow mark="03">Choose your level</Eyebrow>
+              <h2>Three ways to hand it over.</h2>
+              <p className="section-note">
+                Priced per property after a look — the scope below is fixed;
+                the quote is written before you commit to anything.
+              </p>
+            </div>
+            <div className="tier-grid">
+              {tiers.map(tier => (
+                <article
+                  key={tier.name}
+                  className={`tier-card${tier.featured ? " tier-featured" : ""}`}
+                >
+                  {tier.featured && (
+                    <span className="tier-badge">Most chosen</span>
+                  )}
+                  <h3>{tier.name}</h3>
+                  <p className="tier-tagline">{tier.tagline}</p>
+                  <ul>
+                    {tier.points.map(point => (
+                      <li key={point}>
+                        <Check size={15} /> <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <a
+                    className={`button ${tier.featured ? "button-light" : "button-primary"}`}
+                    href="/contact"
+                  >
+                    Get my property quoted <ArrowUpRight size={16} />
+                  </a>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="guarantee-band">
+          <div className="wrap">
+            <div className="section-head">
+              <Eyebrow mark="04">The guarantee</Eyebrow>
+              <h2>
+                <ShieldCheck size={26} /> The Clear Scope Guarantee
+              </h2>
+            </div>
+            <div className="guarantee-grid">
+              <div>
+                <b>Written scope, fixed price</b>
+                <p>
+                  You approve the list and the price before work starts.
+                  That is the price.
+                </p>
+              </div>
+              <div>
+                <b>Done right, or we come back</b>
+                <p>
+                  If anything on the agreed list is not done right, tell us —
+                  we return and make it right.
+                </p>
+              </div>
+              <div>
+                <b>No surprise extras</b>
+                <p>
+                  If we find something unexpected, you hear about it first.
+                  Nothing extra is done, or charged, without your say-so.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="offer-included">
+          <div className="wrap">
+            <div className="section-head">
+              <Eyebrow mark="05">Included</Eyebrow>
+              <h2>Every booking includes</h2>
+            </div>
+            <div className="included-grid">
+              {[
+                {
+                  title: "Photo updates",
+                  text: "Pictures while the work is done, so you can see it without being home.",
+                },
+                {
+                  title: "A seasonal plan for your property",
+                  text: "After the first visit you get the written plan: what your home needs, and when.",
+                },
+                {
+                  title: "Priority rebooking",
+                  text: "Program households book next season before routes open to new bookings.",
+                },
+                {
+                  title: "The Home Check report",
+                  text: "The full checklist run on your property, with photos and a prioritised fix list.",
+                },
+              ].map(item => (
+                <div key={item.title} className="included-item">
+                  <ClipboardList size={19} />
+                  <b>{item.title}</b>
+                  <p>{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <QuoteBand
+          title="Get your property quoted."
+          text="Start with the Home Check, or tell us about the property and we will scope the program for it."
+          href="/contact"
+        />
+      </main>
+    </SiteLayout>
+  );
+}
+
 function ChecklistPage() {
   return (
     <SiteLayout>
@@ -1639,6 +1881,8 @@ function PublicPage({ pathname }: { pathname: string }) {
       return <BlogIndexPage />;
     case "/checklist":
       return <ChecklistPage />;
+    case "/offer":
+      return <OfferPage />;
     case "/contact":
       return <ContactPage />;
     case "/privacy":

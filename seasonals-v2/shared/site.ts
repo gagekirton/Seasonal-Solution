@@ -345,6 +345,19 @@ const meta: Record<string, PageMeta> = {
     ],
     canonicalPath: "/checklist",
   },
+  "/offer": {
+    title: "The Handled Home Program | Seasonal Solutions",
+    description:
+      "Seasonal Solutions' packaged program for Winnipeg homeowners: spring, summer, fall and winter handled under one written scope, one guarantee, quoted per property.",
+    keywords: [
+      "Winnipeg home maintenance program",
+      "seasonal home care plan Winnipeg",
+      "snow and lawn package Winnipeg",
+      "handled home program",
+      "Seasonal Solutions program",
+    ],
+    canonicalPath: "/offer",
+  },
   "/privacy": {
     title: "Privacy Policy | Seasonal Solutions",
     description:

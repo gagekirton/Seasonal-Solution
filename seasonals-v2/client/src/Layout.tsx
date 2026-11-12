@@ -35,6 +35,7 @@ const NAV_LINKS = [
   { href: "/services/landscaping", label: "Landscaping" },
   { href: "/services/painting", label: "Painting" },
   { href: "/services/renovation", label: "Renovations" },
+  { href: "/offer", label: "The Program" },
   { href: "/service-areas", label: "Areas" },
   { href: "/blog", label: "Tips" },
 ];
@@ -149,6 +150,8 @@ function Footer() {
         <div className="footer-column">
           <h2>Explore</h2>
           <a href="/about">About</a>
+          <a href="/offer">The Handled Home Program</a>
+          <a href="/checklist">Seasonal checklist</a>
           <a href="/our-work">Our approach</a>
           <a href="/blog">Home tips & project notes</a>
           <a href="/service-areas">Service areas</a>
