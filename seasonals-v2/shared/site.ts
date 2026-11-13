@@ -725,3 +725,45 @@ export const CHECKLIST: ChecklistSeason[] = [
     ],
   },
 ];
+
+export type GoogleReview = {
+  name: string;
+  text: string;
+};
+
+// Real customer reviews from the business's Google profile — pulled from the
+// live profile on 2026-11-12: a 5.0 rating across 9 reviews, every one of
+// them five stars. Five reviews were visible without signing in and are
+// reproduced verbatim below (wording and spelling as written by the
+// reviewers). Never paraphrase or "fix" them; add new ones only as they
+// appear on Google.
+export const GOOGLE_REVIEWS: {
+  rating: string;
+  count: number;
+  reviews: GoogleReview[];
+} = {
+  rating: "5.0",
+  count: 9,
+  reviews: [
+    {
+      name: "Jenna Hunter",
+      text: "Seasonal Solutions was very friendly. He built my shelves exactly how I wanted them, did an amazing job at painting my house. Also built an amazing raised flower bed for my garden. Was very decently priced and completed every job in a timely manner!",
+    },
+    {
+      name: "J Shew",
+      text: "Great experience with this company. We had to do exterior maintenance on our rental property. The job was done in a timely manner all the while taking the utmost care of the access needs of our tennants. Not only did they do an amazing job painting, but also did stucco repair and other prep work to ensure the project turned out beautiful. Thank you for all your help.",
+    },
+    {
+      name: "Robert Anderson",
+      text: "Just wanted to shout out this reliable handyman company for helping me get my rental unit ready between tenants. They handled everything from painting touch-ups to fixing a sliding door that hadn't worked in years. The service was prompt, affordable, and done with care. They really made my life easier during a hectic week. So grateful for their help!",
+    },
+    {
+      name: "Mark Segal",
+      text: "Cole and his team do amazing work I've had Cole do drywall and lvt flooring I recommend Cole for all your maintenance and home Reno's projects aswell as landscaping contact seasonal solutions today",
+    },
+    {
+      name: "Ashley Whitehead",
+      text: "I was impressed with Seasonal Solutions and his customer service. He knew what I wanted and completed the project in a timely manner.",
+    },
+  ],
+};
