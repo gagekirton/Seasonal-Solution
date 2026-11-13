@@ -13,9 +13,10 @@ import {
   Mail,
   Menu,
   Phone,
+  Star,
   X,
 } from "lucide-react";
-import { BUSINESS, SERVICES } from "../../shared/site";
+import { BUSINESS, GOOGLE_REVIEWS, SERVICES } from "../../shared/site";
 import type { PageData } from "../../shared/content";
 import { Brand } from "./Brand";
 
@@ -288,6 +289,39 @@ export function ChecklistBand() {
         <a className="button button-primary" href="/checklist">
           Get the free checklist <ArrowUpRight size={17} />
         </a>
+      </div>
+    </section>
+  );
+}
+
+export function ReviewsSection() {
+  return (
+    <section className="reviews-section">
+      <div className="wrap">
+        <div className="section-head">
+          <Eyebrow mark="★">Word of mouth</Eyebrow>
+          <h2>Winnipeg homeowners give us five stars.</h2>
+          <p className="section-note">
+            A {GOOGLE_REVIEWS.rating} average across {GOOGLE_REVIEWS.count}{" "}
+            Google reviews — every one of them five stars. A few of them, word
+            for word:
+          </p>
+        </div>
+        <div className="reviews-grid">
+          {GOOGLE_REVIEWS.reviews.map(review => (
+            <figure className="review-card" key={review.name}>
+              <span className="review-stars" role="img" aria-label="5 out of 5 stars">
+                <Star size={15} fill="currentColor" strokeWidth={0} />
+                <Star size={15} fill="currentColor" strokeWidth={0} />
+                <Star size={15} fill="currentColor" strokeWidth={0} />
+                <Star size={15} fill="currentColor" strokeWidth={0} />
+                <Star size={15} fill="currentColor" strokeWidth={0} />
+              </span>
+              <blockquote>{review.text}</blockquote>
+              <figcaption>{review.name} · Google review</figcaption>
+            </figure>
+          ))}
+        </div>
       </div>
     </section>
   );
