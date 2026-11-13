@@ -157,3 +157,40 @@ Second Hormozi build, after the checklist (section 12).
   site already describes its quote process.
 - Verified 2026-11-12: check + 104 tests + build green; page SSR with all sections; sitemap
   includes `/offer`; preview deploy verified live.
+
+## 14. Render demo + TiDB (2026-11-12)
+
+- A working demo of this app runs on Render's free tier
+  (`seasonal-solutions-demo`), built from this branch via `Dockerfile.demo`.
+  One container: the entrypoint boots the app against `DATABASE_URL` when it
+  is set, and falls back to an in-container MariaDB when it is not.
+- The demo's database is a free TiDB Cloud Starter instance (MySQL-compatible);
+  `DATABASE_URL` on the Render service points at its `seasonal` database with
+  TLS required. Data now survives restarts and redeploys (verified with a
+  lead written before a full redeploy and read back after).
+- `scripts/ensure-database.cjs` runs before migrations on hosted boots: it
+  creates the named database if it is missing (migrations cannot) and retries
+  while a scale-to-zero instance wakes. Do not remove it — the first TiDB
+  deploys failed with "Unknown database" until it landed.
+- The container disk is still ephemeral: uploaded files do not persist, and
+  the free web service sleeps when idle. Stripe, QuickBooks and SMTP are not
+  configured on the demo.
+
+## 15. Second approved dashboard sign-in (2026-11-12)
+
+- Besides the owner bootstrap (`OWNER_EMAIL` / `OWNER_PASSWORD`), the login
+  supports a second approved admin via `ADMIN_EMAIL` / `ADMIN_PASSWORD` —
+  same first-run bootstrap, separate account (`openId` `admin:<email>`),
+  role `admin`. Used so Gage (gage.e.kirton@gmail.com) can do dashboard
+  maintenance and assistance without sharing the owner's login. After the
+  first sign-in the database hash is the credential, as with the owner.
+
+## 16. Real Google reviews on the site (2026-11-12)
+
+- `GOOGLE_REVIEWS` in `shared/site.ts` holds the business's real Google
+  reviews: 5.0 stars across 9 reviews (all five stars), pulled from the live
+  Google profile on 2026-11-12. Five were visible without signing in and are
+  reproduced verbatim; the other four could not be loaded (Google sign-in
+  wall) and are not quoted. `ReviewsSection` (Layout.tsx) renders them on the
+  home page and on `/offer` under the guarantee. Keep the wording exactly as
+  written by the reviewers; refresh from Google rather than editing.
