@@ -41,6 +41,7 @@ import {
   PageContext,
   QuoteBand,
   ChecklistBand,
+  ReviewsSection,
   SiteLayout,
   usePage,
 } from "./Layout";
@@ -206,6 +207,7 @@ function HomePage() {
           </span>
         </div>
         <ServicesSection />
+        <ReviewsSection />
         <ChecklistBand />
         <section className="split-story">
           <div className="wrap split-story-inner">
@@ -1467,6 +1469,8 @@ function OfferPage() {
             </div>
           </div>
         </section>
+
+        <ReviewsSection />
 
         <section className="offer-included">
           <div className="wrap">
