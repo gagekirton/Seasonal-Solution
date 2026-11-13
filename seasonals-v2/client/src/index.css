@@ -626,6 +626,12 @@ h1 em, h2 em { color: #9a703e; font-style: italic; }
 
 /* Lead magnet: checklist band, checklist page, print view */
 .magnet-band { background: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 64px 0; }
+.reviews-section { background: #f2f0e7; border-top: 1px solid var(--line); padding: 74px 0; }
+.reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 34px; }
+.review-card { background: var(--cream); border: 1px solid var(--line); border-radius: 14px; padding: 22px; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.review-stars { color: var(--amber); display: inline-flex; gap: 2px; }
+.review-card blockquote { margin: 0; font-size: 15px; line-height: 1.6; }
+.review-card figcaption { margin-top: auto; font-size: 12.5px; letter-spacing: .04em; color: var(--spruce-soft); font-weight: 600; }
 .magnet-band-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .magnet-band h2 { color: var(--spruce-dark); font-family: var(--serif); font-size: 32px; line-height: 1.1; margin: 12px 0 10px; }
 .magnet-band p { color: #5d685f; font-size: 14px; line-height: 1.65; max-width: 560px; }
@@ -713,7 +719,7 @@ h1 em, h2 em { color: #9a703e; font-style: italic; }
   .guarantee-grid { grid-template-columns: 1fr; gap: 22px; }
 }
 @media (max-width: 700px) {
-  .check-offer, .offer-stack, .offer-tiers, .guarantee-band, .offer-included { padding: 52px 0; }
+  .check-offer, .offer-stack, .offer-tiers, .guarantee-band, .offer-included, .reviews-section { padding: 52px 0; }
   .check-offer-grid { grid-template-columns: 1fr; }
   .check-offer-media { justify-self: start; max-width: 230px; }
   .stack-row { grid-template-columns: 1fr auto; }
